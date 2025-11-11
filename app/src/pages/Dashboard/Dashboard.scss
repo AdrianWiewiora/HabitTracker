@@ -1,0 +1,46 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.dashboard-page {
+  padding: $spacing-lg;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-lg;
+  height: 100vh;
+
+  h1 {
+    margin-bottom: $spacing-lg;
+  }
+
+  .dashboard-grid {
+    display: flex;
+    gap: $spacing-lg;
+    height: 80vh;
+    flex: 1;
+  }
+
+  .left-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+
+    .card {
+      flex: 1;
+    }
+  }
+
+  .right-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-lg;
+
+    .top-card {
+      height: 150px;
+    }
+
+    .bottom-card {
+      flex: 1;
+    }
+  }
+}

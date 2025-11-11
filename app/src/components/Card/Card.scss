@@ -1,0 +1,9 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.card {
+  background-color: $background3-color;
+  border: 2px solid $primary-color;
+  border-radius: $border-radius-card;
+  padding: $spacing-md;
+}
