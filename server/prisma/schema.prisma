@@ -1,0 +1,85 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int          @id @default(autoincrement())
+  username     String       @unique
+  email        String       @unique
+  passwordHash String // zamiast password_hash
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  habits       Habit[]      @relation("CreatedHabits")
+  entries      HabitEntry[]
+  notes        Note[]
+}
+
+model Habit {
+  id          Int          @id @default(autoincrement())
+  name        String
+  description String?
+  frequency   Frequency
+  isPrivate   Boolean      @default(true)
+  createdBy   Int? // relacja optionalna
+  creator     User?        @relation("CreatedHabits", fields: [createdBy], references: [id])
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  entries     HabitEntry[]
+  notes       Note[]
+
+  @@unique([name, createdBy], name: "unique_private_habit")
+  @@unique([name], name: "unique_public_habit")
+}
+
+model HabitEntry {
+  habitId   Int
+  userId    Int
+  date      DateTime
+  status    Status
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  habit Habit @relation(fields: [habitId], references: [id])
+  user  User  @relation(fields: [userId], references: [id])
+
+  @@id([habitId, userId, date])
+}
+
+model Note {
+  habitId   Int
+  userId    Int
+  content   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  habit Habit @relation(fields: [habitId], references: [id])
+  user  User  @relation(fields: [userId], references: [id])
+
+  @@id([habitId, userId])
+}
+
+// Enumy
+enum Frequency {
+  Daily
+  Weekly
+  Monthly
+  Yearly
+}
+
+enum Status {
+  done
+  skipped
+  pending
+}

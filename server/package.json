@@ -8,7 +8,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "tsx watch src/server.ts"
+    "dev": "tsx watch src/server.ts",
+    "db:push": "cd prisma && npx prisma db push",
+    "db:migrate": "cd prisma && npx prisma migrate dev --name init",
+    "db:studio": "cd prisma && npx prisma studio"
   },
   "dependencies": {
     "@prisma/client": "^6.19.0",
