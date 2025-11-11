@@ -1,0 +1,47 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:17
+    container_name: habittracker_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: haslo123
+      POSTGRES_DB: HabiTUA
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./server:/HabiTUA/server
+      - /HabiTUA/server/node_modules
+    environment:
+      - NODE_ENV=development
+
+  frontend:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    container_name: habittracker_frontend
+    ports:
+      - "5173:5173"
+    environment:
+      - NODE_ENV=development
+      - DOCKER=true
+    volumes:
+      - ./app/src:/HabiTUA/app/src
+      - ./app/public:/HabiTUA/app/public
+      - ./app/vite.config.ts:/HabiTUA/app/vite.config.ts
+      - ./app/index.html:/HabiTUA/app/index.html
+    command: ["npm", "run", "dev"]
+
+volumes:
+  db_data:
