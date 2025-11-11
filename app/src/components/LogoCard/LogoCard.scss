@@ -1,0 +1,13 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.logo-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  img {
+    max-width: 80%;
+    max-height: 80%;
+  }
+}
