@@ -1,0 +1,134 @@
+@use '@/styles/variables' as *;
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-lg;
+
+  .error-message {
+    color: $error-color;
+    text-align: center;
+    font-size: 0.9rem;
+    background: rgba($error-color, 0.1);
+    padding: 8px;
+    border-radius: $border-radius-sm;
+  }
+
+  .input-group {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    .icon {
+      position: absolute;
+      left: 15px;
+      color: $secondary-color;
+      font-size: 1.2rem;
+      z-index: 1;
+      display: flex;
+    }
+
+    input {
+      width: 100%;
+      background-color: transparent;
+      border: 1px solid $secondary-color;
+      border-radius: 25px;
+      padding: 12px 15px 12px 45px;
+      color: $text-color;
+      font-family: $font-momo;
+      font-size: 1rem;
+      outline: none;
+      transition: box-shadow 0.3s ease;
+
+      &::placeholder {
+        color: rgba($text-color, 0.7);
+      }
+
+      &:focus {
+        box-shadow: 0 0 8px rgba($secondary-color, 0.4);
+      }
+    }
+  }
+
+  .submit-btn {
+    background-color: $primary-color;
+    color: #fff;
+    font-weight: bold;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 25px;
+    padding: 12px;
+    text-transform: uppercase;
+    transition: transform 0.2s;
+
+    &:hover {
+      transform: scale(1.02);
+      background-color: lighten($primary-color, 5%);
+    }
+  }
+
+  .forgot-password {
+    text-align: right;
+    font-size: 0.8rem;
+
+    a {
+      color: rgba($text-color, 0.7);
+      &:hover { color: $text-color; }
+    }
+  }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba($text-color, 0.6);
+    font-size: 0.9rem;
+
+    &::before, &::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba($text-color, 0.2);
+      margin: 0 10px;
+    }
+  }
+
+  .social-login {
+    display: flex;
+    gap: 15px;
+
+    .social-btn {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 10px;
+      border-radius: 25px;
+      border: 1px solid rgba($text-color, 0.2);
+      background: transparent;
+      color: $text-color;
+      font-size: 0.9rem;
+      transition: background 0.3s;
+
+      &:hover {
+        background: rgba($text-color, 0.1);
+      }
+
+      &.google svg { color: #DB4437; }
+      &.facebook svg { color: #4267B2; }
+    }
+  }
+
+  .auth-footer {
+    text-align: center;
+    font-size: 0.9rem;
+    color: rgba($text-color, 0.8);
+
+    .link-highlight {
+      color: $primary-color;
+      font-weight: bold;
+      margin-left: 5px;
+    }
+  }
+}
