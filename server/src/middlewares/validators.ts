@@ -41,3 +41,19 @@ export const loginValidators = [
     body("password")
         .notEmpty().withMessage("Password is required"),
 ];
+
+// Reguły dla tworzenia/edycji Nawyku
+export const habitValidators = [
+    body("name")
+        .trim()
+        .notEmpty().withMessage("Habit name is required")
+        .isLength({ max: 50 }).withMessage("Name is too long (max 50 chars)"),
+
+    body("description")
+        .optional()
+        .trim()
+        .isLength({ max: 200 }).withMessage("Description is too long"),
+
+    body("frequency")
+        .isIn(["Daily", "Weekly", "Monthly", "Yearly"]).withMessage("Invalid frequency value"),
+];
