@@ -61,3 +61,52 @@ export const register = async (req: Request, res: Response): Promise<void> => {
         res.status(500).json({ error: "Internal Server Error" });
     }
 };
+
+export const login = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { email, password } = req.body;
+
+        // 1. Walidacja danych wejściowych
+        if (!email || !password) {
+            res.status(400).json({ error: "Email and password are required" });
+            return;
+        }
+
+        // 2. Znalezienie użytkownika
+        const user = await findUserByEmail(email);
+        if (!user) {
+            // Ze względów bezpieczeństwa nie piszemy "User not found", tylko ogólnie "Invalid credentials"
+            res.status(401).json({ error: "Invalid email or password" });
+            return;
+        }
+
+        // 3. Sprawdzenie hasła (porównanie tekstu z hashem w bazie)
+        const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
+        if (!isPasswordValid) {
+            res.status(401).json({ error: "Invalid email or password" });
+            return;
+        }
+
+        // 4. Generowanie tokena (tak samo jak przy rejestracji)
+        const token = jwt.sign(
+            { id: user.id, username: user.username },
+            JWT_SECRET,
+            { expiresIn: "1h" }
+        );
+
+        // 5. Sukces
+        res.json({
+            message: "Login successful",
+            token,
+            user: {
+                id: user.id,
+                username: user.username,
+                email: user.email
+            }
+        });
+
+    } catch (error) {
+        console.error("Error logging in:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
