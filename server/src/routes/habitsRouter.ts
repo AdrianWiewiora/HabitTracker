@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { create, getAll, remove, update } from "../controllers/habitController.js";
+import {checkHabit, create, getAll, remove, uncheckHabit, update} from "../controllers/habitController.js";
 import { authenticateToken } from "../middlewares/authMiddleware.js";
 import { habitValidators, validate } from "../middlewares/validators.js";
 
@@ -24,5 +24,8 @@ habitsRouter.put(
 );
 
 habitsRouter.delete("/:id", remove);
+
+habitsRouter.post("/:id/check", checkHabit);
+habitsRouter.delete("/:id/check", uncheckHabit);
 
 export default habitsRouter;

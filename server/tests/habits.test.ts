@@ -133,4 +133,54 @@ describe("Habit CRUD Endpoints", () => {
             expect(res.statusCode).toEqual(404);
         });
     });
+
+    // === CHECK-IN (Postępy) ===
+    describe("Habit Progress Tracking", () => {
+        let newHabitId = 0;
+
+        // Tworzymy świeży nawyk do testowania odhaczania
+        beforeAll(async () => {
+            const res = await request(app)
+                .post("/api/habits")
+                .set("Authorization", `Bearer ${token}`)
+                .send({ name: "Daily Pushups", frequency: "Daily" });
+            newHabitId = res.body.id;
+        });
+
+        it("should check-in a habit for today", async () => {
+            const res = await request(app)
+                .post(`/api/habits/${newHabitId}/check`)
+                .set("Authorization", `Bearer ${token}`);
+
+            expect(res.statusCode).toEqual(201);
+            expect(res.body.status).toEqual("done");
+        });
+
+        it("should not allow double check-in for the same day", async () => {
+            const res = await request(app)
+                .post(`/api/habits/${newHabitId}/check`)
+                .set("Authorization", `Bearer ${token}`);
+
+            expect(res.statusCode).toEqual(409); // Conflict
+        });
+
+        it("should uncheck (undo) a habit", async () => {
+            const res = await request(app)
+                .delete(`/api/habits/${newHabitId}/check`)
+                .set("Authorization", `Bearer ${token}`);
+
+            expect(res.statusCode).toEqual(200);
+        });
+
+        it("should handle check-in with specific date", async () => {
+            const pastDate = "2023-01-01";
+            const res = await request(app)
+                .post(`/api/habits/${newHabitId}/check`)
+                .set("Authorization", `Bearer ${token}`)
+                .send({ date: pastDate });
+
+            expect(res.statusCode).toEqual(201);
+            expect(res.body.date).toContain("2023-01-01"); // Prisma zwraca ISO string
+        });
+    });
 });

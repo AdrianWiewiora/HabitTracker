@@ -36,3 +36,39 @@ export const deleteHabit = async (habitId: number) => {
         where: { id: habitId }
     });
 };
+
+// === SEKCJA WPISÓW (ENTRIES) ===
+
+export const addHabitEntry = async (habitId: number, userId: number, date: Date) => {
+    return prisma.habitEntry.create({
+        data: {
+            habitId,
+            userId,
+            date,
+            status: "done" // Domyślnie 'done', bo tak masz w Enumie
+        }
+    });
+};
+
+export const removeHabitEntry = async (habitId: number, userId: number, date: Date) => {
+    return prisma.habitEntry.deleteMany({
+        where: {
+            habitId,
+            userId,
+            date
+        }
+    });
+};
+
+// Sprawdzenie czy wpis już istnieje (żeby nie wywalić błędu 500 przy dublu, tylko ładne info)
+export const getHabitEntry = async (habitId: number, userId: number, date: Date) => {
+    return prisma.habitEntry.findUnique({
+        where: {
+            habitId_userId_date: { // To jest nazwa klucza złożonego w Prisma
+                habitId,
+                userId,
+                date
+            }
+        }
+    });
+};
