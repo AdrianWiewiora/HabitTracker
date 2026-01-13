@@ -1,6 +1,7 @@
 // global.scss
 @use './variables' as *;
 @use './mixins' as *;
+@import url('https://fonts.googleapis.com/css2?family=Anonymous+Pro:ital,wght@0,400;0,700;1,400;1,700&family=Momo+Trust+Display&display=swap" rel="stylesheet');
 
 // reset / normalize
 * {
@@ -11,7 +12,8 @@
 
 // body / root
 body {
-  font-family: $font-momo;
+  font-family: 'Anonymous Pro', monospace;
+  font-weight: bold;
   background-color: $background2-color;
   color: $text-color;
   line-height: 1.5;

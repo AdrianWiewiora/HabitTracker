@@ -1,5 +1,6 @@
 @use '@/styles/variables' as *;
 @use '@/styles/mixins' as *;
+// Usunąłem sass:color, bo Dashboard już go nie używa (używa go MyHabits)
 
 .dashboard-page {
   padding: $spacing-lg;
@@ -7,6 +8,7 @@
   flex-direction: column;
   gap: $spacing-lg;
   height: 100vh;
+  background-color: $background2-color;
 
   h1 {
     margin-bottom: $spacing-lg;
@@ -26,6 +28,9 @@
 
     .card {
       flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 20px;
     }
   }
 

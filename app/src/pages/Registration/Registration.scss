@@ -1,4 +1,5 @@
 @use '@/styles/variables' as *;
+@use "sass:color";
 
 .auth-form {
   display: flex;
@@ -55,7 +56,7 @@
     transition: transform 0.2s, background-color 0.2s;
 
     &:hover {
-      background-color: lighten($primary-color, 5%);
+      background-color: color.adjust($primary-color, $lightness: 5%);
       transform: scale(1.02);
     }
   }

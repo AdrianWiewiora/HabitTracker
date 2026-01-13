@@ -72,3 +72,24 @@ export const getHabitEntry = async (habitId: number, userId: number, date: Date)
         }
     });
 };
+
+export const upsertHabitEntry = async (habitId: number, userId: number, date: Date, status: 'done' | 'skipped') => {
+    return prisma.habitEntry.upsert({
+        where: {
+            habitId_userId_date: {
+                habitId,
+                userId,
+                date
+            }
+        },
+        update: {
+            status: status
+        },
+        create: {
+            habitId,
+            userId,
+            date,
+            status: status
+        }
+    });
+};

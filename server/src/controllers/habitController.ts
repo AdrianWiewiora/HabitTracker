@@ -6,7 +6,7 @@ import {
     deleteHabit,
     updateHabit,
     getHabitById,
-    removeHabitEntry, addHabitEntry, getHabitEntry
+    removeHabitEntry, addHabitEntry, getHabitEntry, upsertHabitEntry
 } from "../models/habitModel.js";
 
 export const create = async (req: AuthRequest, res: Response): Promise<void> => {
@@ -94,10 +94,12 @@ export const checkHabit = async (req: AuthRequest, res: Response): Promise<void>
         // @ts-ignore
         const habitId = parseInt(req.params.id);
         const userId = req.user!.id;
-        // Data może przyjść w body (np. odznaczam wczoraj), a jak nie ma, to dzisiaj
-        const { date } = req.body || {};
 
-        // 1. Sprawdzamy czy nawyk istnieje i jest nasz
+        const { date, status } = req.body || {};
+
+        const validStatuses = ['done', 'skipped'];
+        const statusToSave = validStatuses.includes(status) ? status : 'done';
+
         const habit = await getHabitById(habitId);
         if (!habit || habit.createdBy !== userId) {
             res.status(404).json({ error: "Habit not found" });
@@ -106,16 +108,9 @@ export const checkHabit = async (req: AuthRequest, res: Response): Promise<void>
 
         const normalizedDate = normalizeDate(date);
 
-        // 2. Sprawdzamy czy już nie zaznaczono
-        const existingEntry = await getHabitEntry(habitId, userId, normalizedDate);
-        if (existingEntry) {
-            res.status(409).json({ error: "Habit already checked for this date" });
-            return;
-        }
+        const entry = await upsertHabitEntry(habitId, userId, normalizedDate, statusToSave);
 
-        // 3. Zapisujemy
-        const entry = await addHabitEntry(habitId, userId, normalizedDate);
-        res.status(201).json(entry);
+        res.status(200).json(entry); // 200 OK (bo może być update)
 
     } catch (error) {
         console.error("Check habit error:", error);

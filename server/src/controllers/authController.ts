@@ -38,7 +38,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
         const token = jwt.sign(
             { id: newUser.id, username: newUser.username },
             JWT_SECRET,
-            { expiresIn: "1h" }
+            { expiresIn: "14d" }
         );
 
         res.status(201).json({
@@ -80,7 +80,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
         const token = jwt.sign(
             { id: user.id, username: user.username },
             JWT_SECRET,
-            { expiresIn: "1h" }
+            { expiresIn: "14d" }
         );
 
         // 5. Sukces

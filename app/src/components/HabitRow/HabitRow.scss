@@ -1,0 +1,105 @@
+@use '@/styles/variables' as *;
+
+.habit-row {
+  display: grid;
+  grid-template-columns: 1.8fr 1.5fr 1fr;
+  align-items: center;
+
+  background-color: $background2-color;
+  border-radius: 50px;
+  padding: 12px 24px;
+  margin-bottom: 12px;
+
+  font-family: 'Anonymous Pro', monospace;
+  font-size: 20px;
+  color: $text-color;
+
+  .col-name {
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-right: 15px;
+  }
+
+  .col-recent {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+
+    .status-box {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+
+
+      &.placeholder {
+        background-color: $background3-color;
+        opacity: 0.5; // Opcjonalnie: lekka przezroczystość, żeby był mniej widoczny niż aktywne dni
+      }
+
+      &.orange { background-color: $secondary-color; }
+      &.green { background-color: $primary-color; }
+      &.red { background-color: $error-color; }
+    }
+  }
+
+  .col-today {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    padding-right: 10px;
+
+    .icon-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 18px;
+      transition: all 0.2s;
+      color: white;
+      padding: 0;
+
+      // Domyślnie pełna widoczność (niezależnie czy aktywny czy nie)
+      opacity: 1;
+
+      // === ZIELONY PRZYCISK (CHECK) ===
+      &.check {
+        background-color: $primary-color; // Zawsze soczysty zielony
+
+        // Jak najedziesz, to lekko przygasa (wyszarza)
+        &:hover {
+          opacity: 0.7;
+        }
+
+        // Jak jest aktywny (wybrany), dodajemy poświatę
+        &.active {
+          box-shadow: 0 0 0 3px white, 0 0 15px $primary-color;
+          transform: scale(1.1);
+          z-index: 1; // Żeby cień był nad sąsiednimi elementami
+        }
+      }
+
+      // === CZERWONY PRZYCISK (CROSS) ===
+      &.cross {
+        background-color: $error-color; // Zawsze soczysty czerwony
+
+        // Jak najedziesz, to lekko przygasa
+        &:hover {
+          opacity: 0.7;
+        }
+
+        // Jak jest aktywny (wybrany), dodajemy poświatę
+        &.active {
+          box-shadow: 0 0 0 3px white, 0 0 15px $error-color;
+          transform: scale(1.1);
+          z-index: 1;
+        }
+      }
+    }
+  }
+}
