@@ -1,6 +1,5 @@
 @use '@/styles/variables' as *;
 @use '@/styles/mixins' as *;
-// Usunąłem sass:color, bo Dashboard już go nie używa (używa go MyHabits)
 
 .dashboard-page {
   padding: $spacing-lg;
@@ -9,6 +8,7 @@
   gap: $spacing-lg;
   height: 100vh;
   background-color: $background2-color;
+  overflow: hidden;
 
   h1 {
     margin-bottom: $spacing-lg;
@@ -17,20 +17,24 @@
   .dashboard-grid {
     display: flex;
     gap: $spacing-lg;
-    height: 80vh;
+    height: 100%;
     flex: 1;
+    min-height: 0;
   }
 
   .left-column {
     flex: 1;
     display: flex;
     flex-direction: column;
+    min-height: 0; // Ważne
 
     .card {
       flex: 1;
       display: flex;
       flex-direction: column;
       padding-bottom: 20px;
+      overflow: hidden; // Karta trzyma zawartość w ryzach
+      min-height: 0; // Ważne
     }
   }
 
@@ -39,13 +43,16 @@
     display: flex;
     flex-direction: column;
     gap: $spacing-lg;
+    overflow-y: auto; // Prawa kolumna też może mieć swój scroll jeśli trzeba
 
     .top-card {
       height: 150px;
+      flex-shrink: 0; // Żeby się nie zgniatała
     }
 
     .bottom-card {
       flex: 1;
+      min-height: 0;
     }
   }
 }

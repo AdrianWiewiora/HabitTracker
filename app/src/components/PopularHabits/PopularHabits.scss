@@ -1,0 +1,88 @@
+@use '@/styles/variables' as *;
+@use "sass:color";
+@import url('https://fonts.googleapis.com/css2?family=Anonymous+Pro:wght@400;700&display=swap');
+
+.popular-habits-content {
+  display: flex;
+  flex-direction: column;
+  font-family: 'Anonymous Pro', monospace;
+  padding: 5px;
+  margin-top: 40px;
+  padding-bottom: 20px;
+
+  .title-section {
+    font-size: 64px;
+    font-family: 'Anonymous Pro', monospace;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 2px;
+    color: $text-color;
+  }
+
+  .popular-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .popular-row {
+    display: flex;
+    align-items: center;
+    // justify-content: space-between; <--- Niepotrzebne, bo info-group zajmie wszystko
+
+    background-color: $background2-color;
+    border-radius: 50px;
+    padding: 12px 24px;
+
+    font-size: 20px;
+    color: $text-color;
+
+    .info-group {
+      flex: 1; // Zajmij całe dostępne miejsce aż do przycisku
+      display: grid;
+      // Układ: [Nazwa (auto)] [Liczba (środek)]
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      padding-right: 20px; // Odstęp od przycisku z plusem
+
+      .habit-name {
+        font-weight: bold;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        text-align: left; // Nazwa do lewej
+      }
+
+      .users-count {
+        color: rgba($text-color, 0.5);
+        font-size: 16px;
+        text-align: center; // Liczba na środek
+        font-weight: bold;
+      }
+    }
+
+    .actions {
+      display: flex;
+      flex-shrink: 0; // Nie zgniataj przycisku
+
+      .icon-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        border: none;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: white;
+        transition: all 0.2s;
+
+        &.add {
+          background-color: $primary-color;
+          &:hover { opacity: 0.8; transform: scale(1.05); }
+        }
+      }
+    }
+  }
+}

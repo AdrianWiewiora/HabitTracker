@@ -4,6 +4,7 @@ import type {Habit} from '../../types';
 import HabitRow from '../HabitRow/HabitRow';
 import HabitModal from '../HabitModal/HabitModal';
 import './MyHabits.scss';
+import PopularHabits from "../PopularHabits/PopularHabits.tsx";
 
 export default function MyHabits() {
     // --- STATE ---
@@ -81,6 +82,10 @@ export default function MyHabits() {
         }
     };
 
+    const handlePopularAdded = () => {
+        fetchHabits();
+    };
+
     return (
         <div className="my-habits-content">
             <h1 className="title-64">My Habits</h1>
@@ -111,6 +116,7 @@ export default function MyHabits() {
             <button className="add-btn" onClick={openAddModal}>
                 Add new habit
             </button>
+            <PopularHabits onHabitAdded={handlePopularAdded} />
 
             {/* Modal jest teraz częścią tego komponentu */}
             <HabitModal

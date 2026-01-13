@@ -8,6 +8,45 @@ import {
     getHabitById,
     removeHabitEntry, addHabitEntry, getHabitEntry, upsertHabitEntry
 } from "../models/habitModel.js";
+import prisma from "../utils/prisma.js";
+
+export const getPopular = async (req: AuthRequest, res: Response): Promise<void> => {
+    try {
+        // 1. Pobierz wszystkie publiczne nawyki (szablony)
+        // Jeśli masz ich dużo, możesz tu zostawić take, ale żeby znaleźć NAJPOPULARNIEJSZE
+        // ze wszystkich, lepiej pobrać wszystkie szablony, policzyć i posortować.
+        const publicHabits = await prisma.habit.findMany({
+            where: { isPrivate: false }
+        });
+
+        // 2. Policz użytkowników dla każdego szablonu
+        const results = await Promise.all(publicHabits.map(async (habit) => {
+            const count = await prisma.habit.count({
+                where: {
+                    name: habit.name,
+                    isPrivate: true
+                }
+            });
+
+            return {
+                ...habit,
+                usersCount: count
+            };
+        }));
+
+        // 3. SORTOWANIE (Malejąco po liczbie usersCount)
+        // b - a = od największego do najmniejszego
+        const sortedResults = results.sort((a, b) => b.usersCount - a.usersCount);
+
+        // 4. Ewentualnie tutaj utnij do top 3 lub 5, jeśli pobrałeś wszystkie
+        const topResults = sortedResults.slice(0, 5);
+
+        res.json(topResults);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Server error" });
+    }
+};
 
 export const create = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
