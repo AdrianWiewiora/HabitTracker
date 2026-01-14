@@ -17,7 +17,7 @@
   transition: all 0.2s;
 
   &:hover {
-    background-color: lighten($background2-color, 5%); // Lekkie rozjaśnienie po najechaniu
+    background-color: lighten($background2-color, 10%);
   }
 
   &.selected {
@@ -47,7 +47,7 @@
 
       &.placeholder {
         background-color: $background3-color;
-        opacity: 0.5; // Opcjonalnie: lekka przezroczystość, żeby był mniej widoczny niż aktywne dni
+        opacity: 0.5;
       }
 
       &.orange { background-color: $secondary-color; }
@@ -85,7 +85,8 @@
 
         // Jak najedziesz, to lekko przygasa (wyszarza)
         &:hover {
-          opacity: 0.7;
+          transform: scale(1.1);
+          filter: brightness(1.15);
         }
 
         // Jak jest aktywny (wybrany), dodajemy poświatę
@@ -102,7 +103,8 @@
 
         // Jak najedziesz, to lekko przygasa
         &:hover {
-          opacity: 0.7;
+          transform: scale(1.1);
+          filter: brightness(1.15);
         }
 
         // Jak jest aktywny (wybrany), dodajemy poświatę

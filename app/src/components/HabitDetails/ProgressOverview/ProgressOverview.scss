@@ -1,0 +1,71 @@
+@use '@/styles/variables' as *;
+
+.progress-overview-card {
+  // Bazuje na wspólnym stylu detail-card (background, border-radius)
+  background-color: $background2-color;
+  border-radius: 20px;
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  color: $text-color;
+  font-family: 'Anonymous Pro', monospace;
+
+  .card-title {
+    text-align: center;
+    font-size: 24px;
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-family: 'Anonymous Pro', monospace;
+    font-weight: bold;
+    letter-spacing: 1px;
+  }
+
+  .stats-list {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; // Wyśrodkuj w pionie
+    gap: 20px;
+    flex: 1;
+
+    .stat-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 18px;
+
+      // Kontener na ikonę (żeby były równo w pionie)
+      .icon-box {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        font-size: 20px;
+
+        // Specyficzne style dla ikon (jeśli chcesz tła jak na obrazku 'Days completed')
+        &.green {
+          color: #22c55e;
+        }
+
+        &.orange {
+          color: #f97316; // Ogień
+        }
+
+        &.yellow {
+          color: #eab308; // Puchar
+        }
+      }
+
+      .stat-text {
+        color: $text-color;
+        font-size: 24px;
+
+        strong {
+          font-weight: bold;
+          margin-left: 5px;
+        }
+      }
+    }
+  }
+}
