@@ -181,3 +181,35 @@ export const uncheckHabit = async (req: AuthRequest, res: Response): Promise<voi
         res.status(500).json({ error: "Server error" });
     }
 };
+
+// Notes
+export const updateNote = async (req: AuthRequest, res: Response): Promise<void> => {
+    try {
+        // @ts-ignore
+        const habitId = parseInt(req.params.id);
+        const userId = req.user!.id;
+        const { content } = req.body;
+
+        const note = await prisma.note.upsert({
+            where: {
+                habitId_userId: {
+                    habitId: habitId,
+                    userId: userId
+                }
+            },
+            update: {
+                content: content
+            },
+            create: {
+                habitId: habitId,
+                userId: userId,
+                content: content
+            }
+        });
+
+        res.json(note);
+    } catch (error) {
+        console.error("Update note error:", error);
+        res.status(500).json({ error: "Server error" });
+    }
+};

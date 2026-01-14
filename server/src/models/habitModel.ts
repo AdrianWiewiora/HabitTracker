@@ -11,7 +11,7 @@ export const getHabitsByUserId = async (userId: number) => {
     return prisma.habit.findMany({
         where: { creator: { id: userId } },
         orderBy: { createdAt: 'desc' },
-        include: { entries: true } // Opcjonalnie: pobierz też historię wykonań
+        include: { entries: true, notes: true }
     });
 };
 

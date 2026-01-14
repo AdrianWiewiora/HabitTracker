@@ -31,7 +31,8 @@ a {
 
 // przyciski
 button {
-  font-family: inherit;
+  font-family: 'Anonymous Pro', monospace;
+  font-weight: bold;
   cursor: pointer;
   border-radius: $border-radius-md;
   padding: $spacing-sm $spacing-md;
@@ -39,7 +40,8 @@ button {
 
 // typografia globalna
 h1, h2, h3, h4, h5, h6 {
-  font-family: $font-momo;
+  font-family: 'Anonymous Pro', monospace;
+  font-weight: bold;
   color: $text-color;
   margin-bottom: $spacing-md;
 }
