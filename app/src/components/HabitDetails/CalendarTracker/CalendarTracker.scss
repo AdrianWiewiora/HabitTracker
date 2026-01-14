@@ -1,0 +1,117 @@
+@use '@/styles/variables' as *;
+
+.calendar-tracker-card {
+  background-color: $background2-color;
+  border-radius: 20px;
+  padding: 10px; // Trochę mniejszy padding żeby zmieścić grid
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  color: $text-color;
+  font-family: 'Anonymous Pro', monospace;
+
+  // --- HEADER (Miesiąc i Strzałki) ---
+  .calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+
+    .month-title {
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .nav-btn {
+      background: none;
+      border: none;
+      color: $text-color;
+      cursor: pointer;
+      font-size: 16px;
+      padding: 5px;
+      transition: color 0.2s;
+
+      &:hover {
+        color: $primary-color;
+      }
+
+      &:disabled {
+        cursor: default;
+      }
+    }
+  }
+
+  // --- GRID ---
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr); // 7 kolumn
+    gap: 6px; // Mniejsze odstępy żeby zmieścić liczby
+    width: 100%;
+
+    // Header dni tygodnia (M T W...)
+    .day-header {
+      text-align: center;
+      font-size: 12px;
+      color: rgba($text-color, 0.5);
+      margin-bottom: 5px;
+    }
+
+    // Kwadracik z dniem
+    .day-box {
+      aspect-ratio: 1 / 0.6;
+      border-radius: 8px;
+      display: flex;             // Centrowanie numerka
+      justify-content: center;   // Centrowanie numerka
+      align-items: center;       // Centrowanie numerka
+      font-size: 14px;
+      font-weight: bold;
+      transition: all 0.2s;
+      user-select: none;
+
+      &.empty {
+        background: transparent; // Puste kratki (padding na początku)
+      }
+
+      // --- STANY ---
+
+      &.done {
+        background-color: $primary-color;
+        color: #000; // Czarny tekst na zielonym tle jest czytelniejszy
+      }
+
+      &.skipped {
+        background-color: $error-color;
+        color: white;
+      }
+
+      &.missing {
+        background-color: $error-color;
+        color: white;
+      }
+
+      &.today-empty {
+        background-color: transparent;
+        border: 2px solid $secondary-color;
+        color: $secondary-color;
+      }
+
+      &.future {
+        background-color: transparent;
+        color: rgba($text-color, 0.1); // Prawie niewidoczne
+      }
+
+      &.before-creation {
+        background-color: transparent;
+        color: rgba($text-color, 0.1); // Tak samo jak future, albo kropkowane tło
+        cursor: not-allowed;
+      }
+
+      // Hover tylko dla aktywnych dni
+      &:not(.empty):not(.future):not(.before-creation):hover {
+        transform: scale(1.1);
+        z-index: 2;
+        box-shadow: 0 0 10px rgba(0,0,0,0.5);
+      }
+    }
+  }
+}
