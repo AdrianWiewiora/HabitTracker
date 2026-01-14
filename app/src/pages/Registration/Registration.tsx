@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FaUser, FaEnvelope, FaLock, FaEye } from 'react-icons/fa';
 import AuthLayout from '../../components/AuthLayout/AuthLayout';
 import { client } from '../../api/client';
-import './Registration.scss';
 
 interface RegisterResponse {
     token: string;
@@ -35,6 +34,7 @@ export default function Registration() {
         }
 
         try {
+            // @ts-ignore
             const data = await client<RegisterResponse>('/auth/register', {
                 body: {
                     email,
@@ -43,9 +43,8 @@ export default function Registration() {
                 }
             });
 
-            // 2. Sukces! Wyświetlamy komunikat
             setSuccess('Registration successful! Redirecting...');
-            localStorage.setItem('token', data.token);
+            // localStorage.setItem('token', data.token);
             setTimeout(() => {
                 navigate('/login');
             }, 2000);

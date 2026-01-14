@@ -2,9 +2,6 @@
 
 .community-insights {
   width: 100%;
-  // ZMIANA: Zamiast margin-top, dajemy padding po bokach i na dole,
-  // żeby pasował do padding: 20px w TodaysOverview.
-  // Od góry dajemy 0, bo odstęp zrobi nam się naturalnie lub dodamy mały margin.
   padding: 0 20px 20px 20px;
 
   font-family: 'Anonymous Pro', monospace;
@@ -13,10 +10,10 @@
   .section-title {
     text-align: center;
     font-size: 32px;
-    margin-bottom: 20px; // Zwiększony odstęp, żeby "oddychało" jak wyżej
+    margin-bottom: 20px;
     font-weight: bold;
     letter-spacing: 1px;
-    margin-top: 10px; // Mały odstęp od sekcji powyżej
+    margin-top: 10px;
   }
 
   .cards-grid {
@@ -24,7 +21,6 @@
     grid-template-columns: 1fr;
     gap: 20px;
 
-    // ZMIANA: Ujednolicenie breakpointa z TodaysOverview (tam jest 1024px)
     @media (min-width: 1024px) {
       grid-template-columns: 1fr 1fr;
     }
@@ -32,7 +28,6 @@
 
   .insight-card {
     background-color: $background2-color;
-    // ZMIANA: Ujednolicenie z overview-card (30px zamiast 25px)
     border-radius: 30px;
     padding: 30px;
 
@@ -49,7 +44,6 @@
       text-align: center;
     }
 
-    // --- STYLE DLA TOP HABITS ---
     &.top-habits {
       .list {
         display: flex;
@@ -89,7 +83,6 @@
       }
     }
 
-    // --- STYLE DLA STATS ---
     &.stats-box {
       .stat-row {
         display: flex;

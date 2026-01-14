@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import { useState, useMemo } from 'react';
 import { client } from '../../api/client';
 import Card from '../../components/Card/Card';
 import LogoCard from "../../components/LogoCard/LogoCard";
@@ -8,115 +8,86 @@ import HabitModal from '../../components/HabitModal/HabitModal';
 import ConfirmDeleteModal from '../../components/ConfirmDeleteModal/ConfirmDeleteModal';
 import TodaysOverview from '../../components/TodaysOverview/TodaysOverview';
 import CommunityInsights from '../../components/CommunityInsights/CommunityInsights';
-import type {Habit} from '../../types';
+import type { Habit } from '../../types';
 import './Dashboard.scss';
 
 export default function Dashboard() {
-    const [selectedHabit, setSelectedHabit] = useState<Habit | null>(null);
+    const [allHabits, setAllHabits] = useState<Habit[]>([]);
+    const [selectedId, setSelectedId] = useState<number | null>(null);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [refreshTrigger, setRefreshTrigger] = useState(0);
-    const [allHabits, setAllHabits] = useState<Habit[]>([]);
+
     const triggerRefresh = () => setRefreshTrigger(prev => prev + 1);
 
-    useEffect(() => {
-        if (selectedHabit) {
-            const updatedHabit = allHabits.find(h => h.id === selectedHabit.id);
-            if (updatedHabit) {
-                setSelectedHabit(updatedHabit);
-            }
-        }
-    }, [allHabits]);
+    // Zamiast useEffect do synchronizacji, używamy useMemo
+    const selectedHabit = useMemo(() =>
+            allHabits.find(h => h.id === selectedId) || null
+        , [allHabits, selectedId]);
 
-    // 1. Check/Skip z poziomu Detali
-    const handleCheckFromDetails = async () => {
-        if (!selectedHabit) return;
+    const todayStr = new Date().toLocaleDateString('en-CA');
+
+    // Generyczna funkcja do aktualizacji statusu (Check/Skip)
+    const handleStatusUpdate = async (status: 'done' | 'skipped') => {
+        if (!selectedId) return;
         try {
-            await client(`/habits/${selectedHabit.id}/check`, {
+            await client(`/habits/${selectedId}/check`, {
                 method: 'POST',
-                body: { date: new Date().toLocaleDateString('en-CA'), status: 'done' }
+                body: { date: todayStr, status }
             });
             triggerRefresh();
         } catch (error) { console.error(error); }
     };
 
-    const handleSkipFromDetails = async () => {
-        if (!selectedHabit) return;
+    const handleEditSubmit = async (data: Partial<Habit>) => {
+        if (!selectedId) return;
         try {
-            await client(`/habits/${selectedHabit.id}/check`, {
-                method: 'POST',
-                body: { date: new Date().toLocaleDateString('en-CA'), status: 'skipped' }
-            });
-            triggerRefresh();
-        } catch (error) { console.error(error); }
-    };
-
-    // 2. Edycja
-    const handleEditClick = () => {
-        setIsEditModalOpen(true);
-    };
-
-    const handleEditSubmit = async (data: { name: string, description: string, frequency: string }) => {
-        if (!selectedHabit) return;
-        try {
-            await client(`/habits/${selectedHabit.id}`, {
+            await client(`/habits/${selectedId}`, {
                 method: 'PUT',
                 body: data
             });
             setIsEditModalOpen(false);
             triggerRefresh();
-            setSelectedHabit({ ...selectedHabit, ...data } as Habit);
-        } catch (error) {
-            console.error("Failed to update habit", error);
-        }
-    };
-
-    // 3. Usuwanie
-    const handleDeleteClick = () => {
-        setIsDeleteModalOpen(true);
+        } catch (error) { console.error("Failed to update habit", error); }
     };
 
     const handleDeleteConfirm = async () => {
-        if (!selectedHabit) return;
+        if (!selectedId) return;
         try {
-            await client(`/habits/${selectedHabit.id}`, { method: 'DELETE' });
+            await client(`/habits/${selectedId}`, { method: 'DELETE' });
             setIsDeleteModalOpen(false);
-            setSelectedHabit(null);
+            setSelectedId(null);
             triggerRefresh();
-        } catch (error) {
-            console.error("Failed to delete habit", error);
-        }
+        } catch (error) { console.error("Failed to delete habit", error); }
     };
 
     return (
         <div className="dashboard-page">
             <div className="dashboard-grid">
-                {/* LEWA KOLUMNA */}
                 <div className="left-column">
                     <Card>
                         <MyHabits
-                            onHabitSelect={(h) => setSelectedHabit(prev => prev?.id === h.id ? null : h)}
-                            selectedHabitId={selectedHabit?.id || null}
+                            onHabitSelect={(h) => setSelectedId(prev => prev === h.id ? null : h.id)}
+                            selectedHabitId={selectedId}
                             refreshTrigger={refreshTrigger}
                             onHabitsFetched={setAllHabits}
                         />
                     </Card>
                 </div>
 
-                {/* PRAWA KOLUMNA */}
                 <div className="right-column">
                     <LogoCard />
                     <Card className="bottom-card">
                         {selectedHabit ? (
                             <HabitDetails
                                 habit={selectedHabit}
-                                onCheck={handleCheckFromDetails}
-                                onSkip={handleSkipFromDetails}
-                                onEdit={handleEditClick}
-                                onDelete={handleDeleteClick}
+                                onCheck={() => handleStatusUpdate('done')}
+                                onSkip={() => handleStatusUpdate('skipped')}
+                                onEdit={() => setIsEditModalOpen(true)}
+                                onDelete={() => setIsDeleteModalOpen(true)}
                             />
                         ) : (
-                            <div className="overview-wrapper" style={{ display: 'flex', flexDirection: 'column' }}>
+                            <div className="overview-wrapper">
                                 <TodaysOverview habits={allHabits} />
                                 <CommunityInsights />
                             </div>
@@ -125,17 +96,13 @@ export default function Dashboard() {
                 </div>
             </div>
 
-            {/* MODALE GLOBALNE */}
-
-            {/* Modal Edycji */}
             <HabitModal
                 isOpen={isEditModalOpen}
                 onClose={() => setIsEditModalOpen(false)}
                 onSubmit={handleEditSubmit}
-                initialData={selectedHabit} // Przekazujemy dane do edycji
+                initialData={selectedHabit}
             />
 
-            {/* Modal Usuwania */}
             <ConfirmDeleteModal
                 isOpen={isDeleteModalOpen}
                 habitName={selectedHabit?.name || ''}

@@ -3,7 +3,7 @@
 .calendar-tracker-card {
   background-color: $background2-color;
   border-radius: 20px;
-  padding: 10px; // Trochę mniejszy padding żeby zmieścić grid
+  padding: 10px;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -44,11 +44,10 @@
   // --- GRID ---
   .calendar-grid {
     display: grid;
-    grid-template-columns: repeat(7, 1fr); // 7 kolumn
-    gap: 6px; // Mniejsze odstępy żeby zmieścić liczby
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
     width: 100%;
 
-    // Header dni tygodnia (M T W...)
     .day-header {
       text-align: center;
       font-size: 12px;
@@ -60,9 +59,9 @@
     .day-box {
       aspect-ratio: 1 / 0.6;
       border-radius: 8px;
-      display: flex;             // Centrowanie numerka
-      justify-content: center;   // Centrowanie numerka
-      align-items: center;       // Centrowanie numerka
+      display: flex;
+      justify-content: center;
+      align-items: center;
       font-size: 14px;
       font-weight: bold;
       transition: all 0.2s;
@@ -73,10 +72,9 @@
       }
 
       // --- STANY ---
-
       &.done {
         background-color: $primary-color;
-        color: #000; // Czarny tekst na zielonym tle jest czytelniejszy
+        color: #000;
       }
 
       &.skipped {
@@ -97,12 +95,12 @@
 
       &.future {
         background-color: transparent;
-        color: rgba($text-color, 0.1); // Prawie niewidoczne
+        color: rgba($text-color, 0.1);
       }
 
       &.before-creation {
         background-color: transparent;
-        color: rgba($text-color, 0.1); // Tak samo jak future, albo kropkowane tło
+        color: rgba($text-color, 0.1);
         cursor: not-allowed;
       }
 

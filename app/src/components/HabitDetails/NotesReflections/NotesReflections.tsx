@@ -5,7 +5,6 @@ import './NotesReflections.scss';
 
 export default function NotesReflections({ habit }: { habit: Habit }) {
     const [noteContent, setNoteContent] = useState('');
-    // Zmieniamy boolean na string, żeby obsłużyć więcej stanów
     const [status, setStatus] = useState('Saved');
 
     useEffect(() => {
@@ -14,17 +13,15 @@ export default function NotesReflections({ habit }: { habit: Habit }) {
         } else {
             setNoteContent('');
         }
-        setStatus('Saved'); // Resetujemy status przy zmianie habitu
+        setStatus('Saved');
     }, [habit]);
 
-    // Handler zmiany tekstu
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setNoteContent(e.target.value);
-        setStatus('Unsaved changes...'); // <--- Tu zmieniamy napis podczas pisania
+        setStatus('Unsaved changes...');
     };
 
     const handleSave = async () => {
-        // Opcjonalnie: nie zapisuj, jeśli status jest już 'Saved' (user tylko kliknął i wyszedł)
         if (status === 'Saved') return;
 
         setStatus('Saving...');
@@ -33,7 +30,6 @@ export default function NotesReflections({ habit }: { habit: Habit }) {
                 method: 'PUT',
                 body: { content: noteContent }
             });
-            // Opóźnienie dla efektu wizualnego (opcjonalne, ale przyjemne)
             setTimeout(() => setStatus('Saved'), 500);
         } catch (error) {
             console.error("Failed to save note", error);
@@ -49,12 +45,11 @@ export default function NotesReflections({ habit }: { habit: Habit }) {
                 className="notes-area"
                 placeholder="Write your thoughts here..."
                 value={noteContent}
-                onChange={handleChange} // Podpinamy nasz nowy handler
+                onChange={handleChange}
                 onBlur={handleSave}
                 spellCheck={false}
             />
 
-            {/* Wyświetlamy status. Dodajemy klasę dynamicznie dla kolorów */}
             <div className={`status-indicator ${status === 'Unsaved changes...' ? 'unsaved' : ''}`}>
                 {status}
             </div>

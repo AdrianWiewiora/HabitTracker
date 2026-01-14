@@ -34,7 +34,6 @@ export const client = async <T>(endpoint: string, { body, ...customConfig }: Req
     if (response.ok) {
         return data as T;
     } else {
-        // Jeśli status to np. 401/400/500, rzucamy błąd, żeby React mógł go złapać w catch()
         return Promise.reject(data);
     }
 };

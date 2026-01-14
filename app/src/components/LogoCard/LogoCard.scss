@@ -2,21 +2,20 @@
 
 .logo-card {
   display: flex;
-  justify-content: space-between; // Rozstrzelenie na boki
+  justify-content: space-between;
   align-items: center;
-  padding: 10px 20px; // Trochę luzu wewnątrz karty
-  position: relative; // Żeby dropdown wiedział gdzie jest
-  overflow: visible !important; // WAŻNE: Żeby dropdown mógł wystawać poza kartę!
+  padding: 10px 20px;
+  position: relative;
+  overflow: visible !important;
 
-  // Kontener na obrazek (żeby kontrolować jego wielkość)
   .logo-wrapper {
-    height: 60px; // Ustalona wysokość paska logo
+    height: 60px;
     display: flex;
     align-items: center;
     margin: 4px 15px;
 
     img {
-      max-height: 100%; // Dopasuj do wysokości wrappera
+      max-height: 100%;
       width: auto;
       object-fit: contain;
     }
@@ -31,7 +30,7 @@
     .user-icon-btn {
       background: none;
       border: none;
-      color: $text-color; // Domyślny kolor tekstu/ikon
+      color: $text-color;
       cursor: pointer;
       padding: 0;
       transition: transform 0.2s, color 0.2s;
@@ -39,23 +38,23 @@
 
       &:hover {
         transform: scale(1.1);
-        color: $primary-color; // Na zielono po najechaniu
+        color: $primary-color;
       }
     }
 
     // --- DROPDOWN MENU ---
     .user-dropdown {
       position: absolute;
-      top: 45px; // Odsunięcie od góry (pod ikonką)
-      right: 0; // Przyklej do prawej krawędzi
+      top: 45px;
+      right: 0;
       width: 200px;
 
-      background-color: $background3-color; // Ciemne tło (jak modal)
-      border: 1px solid $primary-color; // Zielona ramka
+      background-color: $background3-color;
+      border: 1px solid $primary-color;
       border-radius: 12px;
       padding: 10px;
       box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-      z-index: 999; // Musi być nad wszystkim
+      z-index: 999;
 
       font-family: 'Anonymous Pro', monospace;
       color: $text-color;
@@ -99,7 +98,7 @@
         }
 
         &.logout {
-          color: $error-color; // Czerwony
+          color: $error-color;
           &:hover {
             background-color: rgba($error-color, 0.1);
           }

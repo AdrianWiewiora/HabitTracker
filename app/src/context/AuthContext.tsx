@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 import type {User} from '../types';
-import { client } from '../api/client'; // <--- Używamy naszego fetcha
+import { client } from '../api/client';
 
 interface AuthContextType {
     user: User | null;
@@ -23,8 +23,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             const storedToken = localStorage.getItem('token');
             if (storedToken) {
                 try {
-                    // Używamy fetcha do pobrania usera
-                    // Oczekujemy obiektu { user: User } bo tak zwraca Twój endpoint getMe
                     const data = await client<{ user: User }>('/auth/me');
                     setUser(data.user);
                     setToken(storedToken);

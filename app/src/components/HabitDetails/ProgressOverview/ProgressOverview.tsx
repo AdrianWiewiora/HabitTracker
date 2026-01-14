@@ -5,18 +5,15 @@ import { normalizeDate, getDaysDiff } from '../../../utils/dateHelpers';
 import './ProgressOverview.scss';
 
 export default function ProgressOverview({ habit }: { habit: Habit }) {
-
     const stats = useMemo(() => {
-        // 1. Pobieramy tylko ZROBIONE (done) do obliczeń passy
         const doneEntries = habit.entries
             .filter(e => e.status === 'done')
             .map(e => normalizeDate(e.date).getTime())
-            .sort((a, b) => b - a); // od najnowszych
+            .sort((a, b) => b - a);
 
         const uniqueDates = Array.from(new Set(doneEntries));
         const totalCompleted = uniqueDates.length;
 
-        // 2. Sprawdzamy czy DZIŚ jest SKIPPED (Pominięte)
         const todayDateObj = normalizeDate(new Date());
         const today = todayDateObj.getTime();
 
@@ -24,7 +21,6 @@ export default function ProgressOverview({ habit }: { habit: Habit }) {
             normalizeDate(e.date).getTime() === today && e.status === 'skipped'
         );
 
-        // --- OBLICZANIE BEST STREAK ---
         let bestStreak = 0;
         if (totalCompleted > 0) {
             let tempStreak = 1;
@@ -42,12 +38,11 @@ export default function ProgressOverview({ habit }: { habit: Habit }) {
             }
         }
 
-        // --- OBLICZANIE CURRENT STREAK ---
         let currentStreak = 0;
         const yesterday = today - (24 * 60 * 60 * 1000);
 
         if (uniqueDates.length > 0) {
-            const lastEntryDate = uniqueDates[0]; // Najnowsza data "done"
+            const lastEntryDate = uniqueDates[0];
             const isStreakAlive =
                 (lastEntryDate === today) ||
                 (lastEntryDate === yesterday && !isSkippedToday);
@@ -62,8 +57,6 @@ export default function ProgressOverview({ habit }: { habit: Habit }) {
                         break;
                     }
                 }
-            } else {
-                currentStreak = 0;
             }
         }
 
@@ -72,7 +65,6 @@ export default function ProgressOverview({ habit }: { habit: Habit }) {
             current: currentStreak,
             best: bestStreak
         };
-
     }, [habit.entries]);
 
     return (

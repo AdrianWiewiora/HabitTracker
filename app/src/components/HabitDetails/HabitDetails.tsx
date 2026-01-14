@@ -26,7 +26,6 @@ export default function HabitDetails({ habit, onCheck, onSkip, onEdit, onDelete 
                     onDelete={onDelete}
                 />
 
-                {/* Reszta bez zmian */}
                 <ProgressOverview habit={habit} />
                 <CalendarTracker habit={habit} />
                 <NotesReflections habit={habit} />

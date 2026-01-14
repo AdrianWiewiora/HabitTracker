@@ -6,21 +6,20 @@ import './HabitModal.scss';
 interface HabitModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onSubmit: (data: { name: string; description: string; frequency: string }) => void;
+    onSubmit: (data: Partial<Habit>) => void;
     initialData?: Habit | null;
 }
 
 export default function HabitModal({ isOpen, onClose, onSubmit, initialData }: HabitModalProps) {
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
-    // @ts-ignore
-    const [frequency, setFrequency] = useState('Daily');
+    const [frequency, setFrequency] = useState<Habit['frequency']>('Daily');
 
     useEffect(() => {
         if (initialData) {
             setName(initialData.name);
             setDescription(initialData.description || '');
-            setFrequency('Daily');
+            setFrequency(initialData.frequency || 'Daily');
         } else {
             setName('');
             setDescription('');
@@ -34,7 +33,11 @@ export default function HabitModal({ isOpen, onClose, onSubmit, initialData }: H
         e.preventDefault();
         if (!name.trim()) return;
 
-        onSubmit({ name, description, frequency: 'Daily' });
+        onSubmit({
+            name,
+            description,
+            frequency
+        });
     };
 
     return (

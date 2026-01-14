@@ -14,13 +14,11 @@ interface MyHabitsProps {
 }
 
 export default function MyHabits({ onHabitSelect, selectedHabitId, refreshTrigger, onHabitsFetched }: MyHabitsProps) {
-    // --- STATE ---
     const [habits, setHabits] = useState<Habit[]>([]);
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedHabit, setSelectedHabit] = useState<Habit | null>(null);
 
-    // --- POBIERANIE DANYCH ---
     const fetchHabits = async () => {
         try {
             const data = await client<Habit[]>('/habits');
@@ -37,7 +35,6 @@ export default function MyHabits({ onHabitSelect, selectedHabitId, refreshTrigge
         fetchHabits();
     }, [refreshTrigger]);
 
-    // --- HANDLERY (CHECK / SKIP) ---
     const handleCheck = async (habit: Habit) => {
         try {
             await client(`/habits/${habit.id}/check`, {
@@ -64,7 +61,6 @@ export default function MyHabits({ onHabitSelect, selectedHabitId, refreshTrigge
         } catch (error) { console.error(error); }
     };
 
-    // --- OBSŁUGA MODALA ---
     const openAddModal = () => {
         setSelectedHabit(null);
         setIsModalOpen(true);
@@ -75,18 +71,13 @@ export default function MyHabits({ onHabitSelect, selectedHabitId, refreshTrigge
         setSelectedHabit(null);
     };
 
-    const handleSaveHabit = async (habitData: { name: string; description: string; frequency: string }) => {
+    const handleSaveHabit = async (habitData: Partial<Habit>) => {
         try {
-            if (selectedHabit) {
-                // Tu będzie logika edycji w przyszłości
-            } else {
-                await client('/habits', { body: { ...habitData } });
-            }
+            await client('/habits', { body: { ...habitData } });
             closeModal();
             fetchHabits();
         } catch (error) {
             console.error("Error saving habit:", error);
-            alert("Failed to save habit");
         }
     };
 
@@ -128,7 +119,6 @@ export default function MyHabits({ onHabitSelect, selectedHabitId, refreshTrigge
             </button>
             <PopularHabits onHabitAdded={handlePopularAdded} />
 
-            {/* Modal jest teraz częścią tego komponentu */}
             <HabitModal
                 isOpen={isModalOpen}
                 onClose={closeModal}

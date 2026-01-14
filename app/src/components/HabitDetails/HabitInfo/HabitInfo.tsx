@@ -13,7 +13,6 @@ interface HabitInfoProps {
 export default function HabitInfo({ habit, onCheck, onSkip, onEdit, onDelete }: HabitInfoProps) {
     return (
         <div className="habit-info-card">
-            {/* Tabela z informacjami */}
             <div className="info-grid">
                 <div className="info-row">
                     <span className="label">Name:</span>
@@ -33,7 +32,6 @@ export default function HabitInfo({ habit, onCheck, onSkip, onEdit, onDelete }: 
                 </div>
             </div>
 
-            {/* Przyciski Akcji */}
             <div className="actions-grid">
                 <button className="action-btn done" onClick={onCheck}>
                     <span>Done</span>

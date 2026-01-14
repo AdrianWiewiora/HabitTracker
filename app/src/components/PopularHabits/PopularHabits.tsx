@@ -18,7 +18,6 @@ interface PopularHabitsProps {
 export default function PopularHabits({ onHabitAdded }: PopularHabitsProps) {
     const [popularHabits, setPopularHabits] = useState<PopularHabit[]>([]);
 
-    // Wyciągamy funkcję pobierania, żeby móc jej użyć w useEffect ORAZ po kliknięciu
     const fetchPopular = useCallback(async () => {
         try {
             const data = await client<PopularHabit[]>('/habits/popular');
@@ -28,7 +27,7 @@ export default function PopularHabits({ onHabitAdded }: PopularHabitsProps) {
         }
     }, []);
 
-    // Pobierz przy starcie
+    //  przy starcie
     useEffect(() => {
         fetchPopular();
     }, [fetchPopular]);
@@ -43,13 +42,8 @@ export default function PopularHabits({ onHabitAdded }: PopularHabitsProps) {
                 }
             });
 
-            // 1. Odśwież listę "My Habits" (żebyś widział nowy nawyk u góry)
             onHabitAdded();
-
-            // 2. Odśwież listę "Popular Habits" (żeby zaktualizować licznik userów +1)
             await fetchPopular();
-
-            // Opcjonalnie: usunąłem alert, bo jest irytujący, odświeżenie widoku wystarczy
         } catch (error) {
             console.error("Error adding popular habit", error);
         }

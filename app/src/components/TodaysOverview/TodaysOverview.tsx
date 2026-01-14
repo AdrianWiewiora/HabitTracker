@@ -11,7 +11,6 @@ interface TodaysOverviewProps {
 export default function TodaysOverview({ habits }: TodaysOverviewProps) {
     const [quote, setQuote] = useState<string>('Loading affirmation...');
 
-    // 1. Pobieranie cytatu z API
     useEffect(() => {
         const fetchQuote = async () => {
             try {
@@ -26,7 +25,6 @@ export default function TodaysOverview({ habits }: TodaysOverviewProps) {
         fetchQuote();
     }, []);
 
-    // 2. Obliczanie metryk
     const metrics = useMemo(() => {
         const todayKey = getDateKey(new Date());
         const totalHabits = habits.length;
@@ -35,27 +33,18 @@ export default function TodaysOverview({ habits }: TodaysOverviewProps) {
             return { completed: '0/0', streaks: 0, consistency: '0%' };
         }
 
-        // A. Completed Habits Today (Liczba nawyków zrobionych dziś)
         const completedTodayCount = habits.filter(h =>
             h.entries.some(e => getDateKey(e.date) === todayKey && e.status === 'done')
         ).length;
 
-        // B. Active Streaks (NOWA LOGIKA: Dziś zrobione + Streak >= 2)
         const activeStreaksCount = habits.filter(h => {
-            // 1. Sprawdzamy, czy nawyk jest zrobiony DZIŚ
             const isDoneToday = h.entries.some(e =>
                 getDateKey(e.date) === todayKey && e.status === 'done'
             );
-
-            // 2. Pobieramy długość passy
             const streak = calculateCurrentStreak(h);
-
-            // 3. Warunek: Musi być zrobiony dzisiaj ORAZ passa musi wynosić min. 2 dni.
-            // (Skoro jest zrobiony dziś i streak to min. 2, oznacza to, że wczoraj też był zrobiony).
             return isDoneToday && streak >= 2;
         }).length;
 
-        // C. Consistency (Dzisiejsze ukończone / wszystkie)
         const consistencyPercent = Math.round((completedTodayCount / totalHabits) * 100);
 
         return {

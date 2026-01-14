@@ -1,6 +1,5 @@
 @use '@/styles/variables' as *;
 @use "sass:color";
-@import url('https://fonts.googleapis.com/css2?family=Anonymous+Pro:wght@400;700&display=swap');
 
 .popular-habits-content {
   display: flex;
@@ -28,7 +27,6 @@
   .popular-row {
     display: flex;
     align-items: center;
-    // justify-content: space-between; <--- Niepotrzebne, bo info-group zajmie wszystko
 
     background-color: $background2-color;
     border-radius: 50px;
@@ -38,32 +36,31 @@
     color: $text-color;
 
     .info-group {
-      flex: 1; // Zajmij całe dostępne miejsce aż do przycisku
+      flex: 1;
       display: grid;
-      // Układ: [Nazwa (auto)] [Liczba (środek)]
       grid-template-columns: 1fr 1fr;
       align-items: center;
-      padding-right: 20px; // Odstęp od przycisku z plusem
+      padding-right: 20px;
 
       .habit-name {
         font-weight: bold;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        text-align: left; // Nazwa do lewej
+        text-align: left;
       }
 
       .users-count {
         color: rgba($text-color, 0.5);
         font-size: 16px;
-        text-align: center; // Liczba na środek
+        text-align: center;
         font-weight: bold;
       }
     }
 
     .actions {
       display: flex;
-      flex-shrink: 0; // Nie zgniataj przycisku
+      flex-shrink: 0;
 
       .icon-btn {
         width: 36px;

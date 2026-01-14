@@ -4,7 +4,6 @@ import { FaEnvelope, FaLock, FaGoogle, FaFacebook } from 'react-icons/fa';
 import AuthLayout from '../../components/AuthLayout/AuthLayout';
 import { client } from '../../api/client';
 import { useAuth } from '../../context/AuthContext';
-import './Login.scss';
 
 interface LoginResponse {
     token: string;
