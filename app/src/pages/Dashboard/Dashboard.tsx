@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import {useEffect, useState} from 'react';
 import { client } from '../../api/client';
 import Card from '../../components/Card/Card';
 import LogoCard from "../../components/LogoCard/LogoCard";
@@ -7,19 +7,26 @@ import HabitDetails from '../../components/HabitDetails/HabitDetails';
 import HabitModal from '../../components/HabitModal/HabitModal';
 import ConfirmDeleteModal from '../../components/ConfirmDeleteModal/ConfirmDeleteModal';
 import TodaysOverview from '../../components/TodaysOverview/TodaysOverview';
-import CommunityInsights from '../../components/CommunityInsights/CommunityInsights'; // Import
+import CommunityInsights from '../../components/CommunityInsights/CommunityInsights';
 import type {Habit} from '../../types';
 import './Dashboard.scss';
 
 export default function Dashboard() {
     const [selectedHabit, setSelectedHabit] = useState<Habit | null>(null);
-
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [refreshTrigger, setRefreshTrigger] = useState(0);
     const [allHabits, setAllHabits] = useState<Habit[]>([]);
     const triggerRefresh = () => setRefreshTrigger(prev => prev + 1);
 
+    useEffect(() => {
+        if (selectedHabit) {
+            const updatedHabit = allHabits.find(h => h.id === selectedHabit.id);
+            if (updatedHabit) {
+                setSelectedHabit(updatedHabit);
+            }
+        }
+    }, [allHabits]);
 
     // 1. Check/Skip z poziomu Detali
     const handleCheckFromDetails = async () => {
@@ -53,7 +60,7 @@ export default function Dashboard() {
         if (!selectedHabit) return;
         try {
             await client(`/habits/${selectedHabit.id}`, {
-                method: 'PUT', // Zakładam, że masz endpoint PUT /habits/:id
+                method: 'PUT',
                 body: data
             });
             setIsEditModalOpen(false);
@@ -72,7 +79,7 @@ export default function Dashboard() {
     const handleDeleteConfirm = async () => {
         if (!selectedHabit) return;
         try {
-            await client(`/habits/${selectedHabit.id}`, { method: 'DELETE' }); // Zakładam endpoint DELETE
+            await client(`/habits/${selectedHabit.id}`, { method: 'DELETE' });
             setIsDeleteModalOpen(false);
             setSelectedHabit(null);
             triggerRefresh();

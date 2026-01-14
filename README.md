@@ -36,3 +36,10 @@ docker-compose up     # start all services
 ```bash
 docker-compose down   # stop all services
 ```
+
+Konta
+test@mail.com
+test2@mail.com
+test3@mail.com
+test4@mail.com
+asd123

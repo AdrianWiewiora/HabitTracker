@@ -3,29 +3,25 @@ import type {Habit} from '../../types';
 import { FaTimes } from 'react-icons/fa';
 import './HabitModal.scss';
 
-// Typy propsów
 interface HabitModalProps {
     isOpen: boolean;
     onClose: () => void;
     onSubmit: (data: { name: string; description: string; frequency: string }) => void;
-    initialData?: Habit | null; // Jeśli podamy habit, to tryb edycji. Jeśli null, to dodawanie.
+    initialData?: Habit | null;
 }
 
 export default function HabitModal({ isOpen, onClose, onSubmit, initialData }: HabitModalProps) {
-    // Stany formularza
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
+    // @ts-ignore
     const [frequency, setFrequency] = useState('Daily');
 
-    // Resetowanie lub wypełnianie formularza przy otwarciu
     useEffect(() => {
         if (initialData) {
-            // TRYB EDYCJI: Wypełnij danymi
             setName(initialData.name);
             setDescription(initialData.description || '');
-            setFrequency(initialData.frequency);
+            setFrequency('Daily');
         } else {
-            // TRYB DODAWANIA: Wyczyść
             setName('');
             setDescription('');
             setFrequency('Daily');
@@ -36,16 +32,13 @@ export default function HabitModal({ isOpen, onClose, onSubmit, initialData }: H
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        // Walidacja
         if (!name.trim()) return;
 
-        // Wysyłamy dane do rodzica (Dashboard)
-        onSubmit({ name, description, frequency });
+        onSubmit({ name, description, frequency: 'Daily' });
     };
 
     return (
         <div className="modal-overlay" onClick={onClose}>
-            {/* stopPropagation sprawia, że kliknięcie w okienko nie zamyka go */}
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
 
                 <div className="modal-header">
@@ -58,11 +51,10 @@ export default function HabitModal({ isOpen, onClose, onSubmit, initialData }: H
                 <form onSubmit={handleSubmit}>
                     {/* NAME */}
                     <div className="form-group">
-                        {/* htmlFor musi pasować do id inputa */}
                         <label htmlFor="habitName">Habit Name</label>
                         <input
-                            id="habitName"       // <--- DODANE
-                            name="name"          // <--- DODANE
+                            id="habitName"
+                            name="name"
                             type="text"
                             placeholder="e.g. Read 10 pages"
                             value={name}
@@ -76,8 +68,8 @@ export default function HabitModal({ isOpen, onClose, onSubmit, initialData }: H
                     <div className="form-group">
                         <label htmlFor="habitDesc">Description <small>(optional)</small></label>
                         <textarea
-                            id="habitDesc"       // <--- DODANE
-                            name="description"   // <--- DODANE
+                            id="habitDesc"
+                            name="description"
                             placeholder="Why do you want to build this habit?"
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
@@ -85,20 +77,25 @@ export default function HabitModal({ isOpen, onClose, onSubmit, initialData }: H
                         />
                     </div>
 
-                    {/* FREQUENCY */}
+                    {/* FREQUENCY - ZABLOKOWANE */}
                     <div className="form-group">
                         <label htmlFor="habitFreq">Frequency</label>
                         <select
-                            id="habitFreq"       // <--- DODANE
-                            name="frequency"     // <--- DODANE
-                            value={frequency}
-                            onChange={(e) => setFrequency(e.target.value)}
+                            id="habitFreq"
+                            name="frequency"
+                            value="Daily"
+                            disabled
+                            style={{ opacity: 0.6, cursor: 'not-allowed' }}
+                            onChange={() => {}}
                         >
                             <option value="Daily">Daily</option>
                             <option value="Weekly">Weekly</option>
                             <option value="Monthly">Monthly</option>
                             <option value="Yearly">Yearly</option>
                         </select>
+                        <small style={{ color: 'rgba(255,255,255,0.4)', fontSize: '12px', marginTop: '5px', display: 'block' }}>
+                            Currently only daily tracking is supported.
+                        </small>
                     </div>
 
                     {/* ACTIONS */}

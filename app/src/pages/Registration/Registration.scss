@@ -6,6 +6,29 @@
   flex-direction: column;
   gap: $spacing-lg;
 
+  // --- NOWE STYLE DLA KOMUNIKATÓW ---
+  .message {
+    text-align: center;
+    font-size: 0.9rem;
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 15px;
+    margin-bottom: 5px;
+
+    &.error {
+      color: #ff4d4d;
+      background-color: rgba(255, 77, 77, 0.1);
+      border: 1px solid rgba(255, 77, 77, 0.2);
+    }
+
+    &.success {
+      color: #2ecc71; // Ładny zielony
+      background-color: rgba(46, 204, 113, 0.1);
+      border: 1px solid rgba(46, 204, 113, 0.2);
+    }
+  }
+  // ----------------------------------
+
   .input-group {
     position: relative;
     display: flex;
@@ -14,7 +37,7 @@
     .icon {
       position: absolute;
       left: 15px;
-      color: $secondary-color; // Pomarańczowe ikony z designu
+      color: $secondary-color;
       font-size: 1.2rem;
       z-index: 1;
       display: flex;
@@ -23,9 +46,9 @@
     input {
       width: 100%;
       background-color: transparent;
-      border: 1px solid $secondary-color; // Pomarańczowy obrys
-      border-radius: 25px; // Zaokrąglone inputy
-      padding: 12px 15px 12px 45px; // Padding z lewej na ikonę
+      border: 1px solid $secondary-color;
+      border-radius: 25px;
+      padding: 12px 15px 12px 45px;
       color: $text-color;
       font-family: $font-momo;
       font-size: 1rem;
@@ -34,11 +57,17 @@
 
       &::placeholder {
         color: rgba($text-color, 0.7);
-        font-family: monospace; // Żeby przypominało czcionkę z obrazka
+        font-family: monospace;
       }
 
       &:focus {
         box-shadow: 0 0 8px rgba($secondary-color, 0.4);
+      }
+
+      // Styl dla zablokowanego inputa (podczas przekierowania)
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
       }
     }
   }
@@ -54,10 +83,18 @@
     margin-top: $spacing-md;
     text-transform: uppercase;
     transition: transform 0.2s, background-color 0.2s;
+    cursor: pointer;
 
     &:hover {
       background-color: color.adjust($primary-color, $lightness: 5%);
       transform: scale(1.02);
+    }
+
+    // Styl zablokowanego przycisku
+    &:disabled {
+      background-color: #2ecc71; // Zmieniamy na zielony przy sukcesie
+      cursor: default;
+      transform: none;
     }
   }
 

@@ -5,7 +5,6 @@ import AuthLayout from '../../components/AuthLayout/AuthLayout';
 import { client } from '../../api/client';
 import './Registration.scss';
 
-// Typujemy to, co zwraca backend przy rejestracji (token + user)
 interface RegisterResponse {
     token: string;
     user: {
@@ -21,12 +20,14 @@ export default function Registration() {
     const [password, setPassword] = useState('');
     const [repeatPassword, setRepeatPassword] = useState('');
     const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
 
     const navigate = useNavigate();
 
     const handleRegister = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
+        setSuccess('');
 
         if (password !== repeatPassword) {
             setError("Passwords do not match!");
@@ -42,24 +43,25 @@ export default function Registration() {
                 }
             });
 
-            // Jeśli kod dotarł tutaj, to znaczy, że jest sukces (201 Created)
-            // 'client' sam rzuciłby błąd (catch) gdyby było np. 400 lub 500
-
+            // 2. Sukces! Wyświetlamy komunikat
+            setSuccess('Registration successful! Redirecting...');
             localStorage.setItem('token', data.token);
-            navigate('/login');
+            setTimeout(() => {
+                navigate('/login');
+            }, 2000);
 
         } catch (err: any) {
-            // Nasz client rzuca obiektem błędu z backendu (np. { error: "User exists" })
             console.error(err);
             setError(err.error || 'Registration failed');
         }
     };
 
     return (
-        <AuthLayout title="Sign In">
+        <AuthLayout title="Sign Up">
             <form className="auth-form" onSubmit={handleRegister}>
 
-                {error && <div style={{ color: '#FF1A1A', textAlign: 'center', marginBottom: '10px' }}>{error}</div>}
+                {error && <div className="message error">{error}</div>}
+                {success && <div className="message success">{success}</div>}
 
                 {/* Email */}
                 <div className="input-group">
@@ -70,6 +72,7 @@ export default function Registration() {
                         required
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
+                        disabled={!!success}
                     />
                 </div>
 
@@ -82,6 +85,7 @@ export default function Registration() {
                         required
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
+                        disabled={!!success}
                     />
                 </div>
 
@@ -94,6 +98,7 @@ export default function Registration() {
                         required
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
+                        disabled={!!success}
                     />
                 </div>
 
@@ -106,11 +111,12 @@ export default function Registration() {
                         required
                         value={repeatPassword}
                         onChange={(e) => setRepeatPassword(e.target.value)}
+                        disabled={!!success}
                     />
                 </div>
 
-                <button type="submit" className="submit-btn">
-                    Sign Up
+                <button type="submit" className="submit-btn" disabled={!!success}>
+                    {success ? "Success!" : "Sign Up"}
                 </button>
 
                 <div className="auth-footer">
