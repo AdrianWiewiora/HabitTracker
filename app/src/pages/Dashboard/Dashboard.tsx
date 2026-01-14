@@ -1,12 +1,9 @@
-import { useAuth } from '../../context/AuthContext';
 import Card from '../../components/Card/Card';
 import LogoCard from "../../components/LogoCard/LogoCard";
 import MyHabits from '../../components/MyHabits/MyHabits';
 import './Dashboard.scss';
 
 export default function Dashboard() {
-    const { logout } = useAuth();
-
     return (
         <div className="dashboard-page">
             <div className="dashboard-grid">
@@ -23,7 +20,6 @@ export default function Dashboard() {
                     <LogoCard />
                     <Card className="bottom-card">
                         <h2>Right Column (Details)</h2>
-                        <button onClick={logout} style={{marginTop: 20}}>Logout</button>
                     </Card>
                 </div>
             </div>

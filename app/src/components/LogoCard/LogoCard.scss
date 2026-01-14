@@ -1,13 +1,115 @@
 @use '@/styles/variables' as *;
-@use '@/styles/mixins' as *;
 
 .logo-card {
   display: flex;
-  justify-content: center;
+  justify-content: space-between; // Rozstrzelenie na boki
   align-items: center;
+  padding: 10px 20px; // Trochę luzu wewnątrz karty
+  position: relative; // Żeby dropdown wiedział gdzie jest
+  overflow: visible !important; // WAŻNE: Żeby dropdown mógł wystawać poza kartę!
 
-  img {
-    max-width: 80%;
-    max-height: 80%;
+  // Kontener na obrazek (żeby kontrolować jego wielkość)
+  .logo-wrapper {
+    height: 60px; // Ustalona wysokość paska logo
+    display: flex;
+    align-items: center;
+    margin: 4px 15px;
+
+    img {
+      max-height: 100%; // Dopasuj do wysokości wrappera
+      width: auto;
+      object-fit: contain;
+    }
   }
+
+  // Prawa strona z ikonką
+  .user-section {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    .user-icon-btn {
+      background: none;
+      border: none;
+      color: $text-color; // Domyślny kolor tekstu/ikon
+      cursor: pointer;
+      padding: 0;
+      transition: transform 0.2s, color 0.2s;
+      display: flex;
+
+      &:hover {
+        transform: scale(1.1);
+        color: $primary-color; // Na zielono po najechaniu
+      }
+    }
+
+    // --- DROPDOWN MENU ---
+    .user-dropdown {
+      position: absolute;
+      top: 45px; // Odsunięcie od góry (pod ikonką)
+      right: 0; // Przyklej do prawej krawędzi
+      width: 200px;
+
+      background-color: $background3-color; // Ciemne tło (jak modal)
+      border: 1px solid $primary-color; // Zielona ramka
+      border-radius: 12px;
+      padding: 10px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      z-index: 999; // Musi być nad wszystkim
+
+      font-family: 'Anonymous Pro', monospace;
+      color: $text-color;
+      animation: fadeIn 0.2s ease-out;
+
+      .user-info {
+        padding: 5px 10px;
+        display: flex;
+        flex-direction: column;
+
+        small {
+          font-size: 12px;
+          color: rgba($text-color, 0.5);
+        }
+        strong { font-size: 16px; }
+      }
+
+      .divider {
+        height: 1px;
+        background-color: rgba($text-color, 0.2);
+        margin: 8px 0;
+      }
+
+      .menu-item {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px;
+        border: none;
+        background: none;
+        color: $text-color;
+        font-family: 'Anonymous Pro', monospace;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 6px;
+        transition: background 0.2s;
+
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        &.logout {
+          color: $error-color; // Czerwony
+          &:hover {
+            background-color: rgba($error-color, 0.1);
+          }
+        }
+      }
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
