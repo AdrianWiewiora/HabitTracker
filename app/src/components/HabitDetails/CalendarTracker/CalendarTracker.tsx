@@ -2,11 +2,7 @@ import { useState, useMemo } from 'react';
 import type { Habit } from '../../../types';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import './CalendarTracker.scss';
-
-// Helper: Format YYYY-MM-DD
-const getDateKey = (d: Date) => {
-    return d.toLocaleDateString('en-CA');
-};
+import {getDateKey} from "../../../utils/dateHelpers.ts";
 
 export default function CalendarTracker({ habit }: { habit: Habit }) {
     // Stan: Aktualnie wyświetlany miesiąc (zawsze ustawiony na 1. dzień miesiąca)

@@ -2,20 +2,7 @@ import { useMemo } from 'react';
 import type { Habit } from '../../../types';
 import { FaCheck, FaFire, FaTrophy } from 'react-icons/fa';
 import './ProgressOverview.scss';
-
-// --- FUNKCJE POMOCNICZE ---
-
-const normalizeDate = (dateStr: string | Date) => {
-    const d = new Date(dateStr);
-    d.setHours(0, 0, 0, 0);
-    return d;
-};
-
-// Zmieniamy typy na number, bo w useMemo operujemy na timestampach
-const getDaysDiff = (time1: number, time2: number) => {
-    const oneDay = 24 * 60 * 60 * 1000;
-    return Math.round(Math.abs((time1 - time2) / oneDay));
-};
+import {getDaysDiff, normalizeDate} from "../../../utils/dateHelpers.ts";
 
 export default function ProgressOverview({ habit }: { habit: Habit }) {
 

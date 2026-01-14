@@ -1,0 +1,75 @@
+@use '@/styles/variables' as *;
+
+.todays-overview-container {
+  font-family: 'Anonymous Pro', monospace;
+  color: $text-color;
+  padding: 20px;
+  height: 100%; // Zajmij całą wysokość karty rodzica
+  display: flex;
+  flex-direction: column;
+
+  .title-section {
+    font-size: 32px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  .overview-grid {
+    display: grid;
+    // Na dużych ekranach 2 kolumny, na małych 1
+    grid-template-columns: 1fr;
+    @media (min-width: 1024px) {
+      grid-template-columns: 1fr 1fr;
+    }
+    gap: 20px;
+    flex: 1; // Rozciągnij się
+  }
+
+  // Wspólny styl dla obu kart
+  .overview-card {
+    background-color: $background2-color;
+    border-radius: 30px; // Mocno zaokrąglone rogi jak w designie
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  // --- KARTA METRYK (LEWA) ---
+  .metrics-card {
+    gap: 25px;
+
+    .metric-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 18px;
+      font-weight: bold;
+
+      .label {
+        flex: 1;
+      }
+
+      .value {
+        margin-right: 20px;
+      }
+
+      .icon {
+        font-size: 24px;
+        &.green { color: $primary-color; }
+        &.orange { color: #f97316; }
+        &.yellow { color: #eab308; }
+      }
+    }
+  }
+
+  // --- KARTA CYTATU (PRAWA) ---
+  .quote-card {
+    text-align: center;
+    font-size: 20px;
+    line-height: 1.4;
+    font-style: italic;
+    font-weight: bold;
+  }
+}

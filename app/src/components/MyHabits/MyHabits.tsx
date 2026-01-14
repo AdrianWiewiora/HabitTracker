@@ -10,9 +10,10 @@ interface MyHabitsProps {
     onHabitSelect: (habit: Habit) => void;
     selectedHabitId: number | null;
     refreshTrigger?: number;
+    onHabitsFetched?: (habits: Habit[]) => void;
 }
 
-export default function MyHabits({ onHabitSelect, selectedHabitId, refreshTrigger }: MyHabitsProps) {
+export default function MyHabits({ onHabitSelect, selectedHabitId, refreshTrigger, onHabitsFetched }: MyHabitsProps) {
     // --- STATE ---
     const [habits, setHabits] = useState<Habit[]>([]);
     const [loading, setLoading] = useState(true);
@@ -24,6 +25,7 @@ export default function MyHabits({ onHabitSelect, selectedHabitId, refreshTrigge
         try {
             const data = await client<Habit[]>('/habits');
             setHabits(data);
+            if (onHabitsFetched) onHabitsFetched(data);
         } catch (error) {
             console.error("Failed to fetch habits", error);
         } finally {

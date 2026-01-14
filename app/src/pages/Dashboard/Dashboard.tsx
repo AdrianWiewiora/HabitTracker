@@ -6,6 +6,7 @@ import MyHabits from '../../components/MyHabits/MyHabits';
 import HabitDetails from '../../components/HabitDetails/HabitDetails';
 import HabitModal from '../../components/HabitModal/HabitModal';
 import ConfirmDeleteModal from '../../components/ConfirmDeleteModal/ConfirmDeleteModal';
+import TodaysOverview from '../../components/TodaysOverview/TodaysOverview';
 import type {Habit} from '../../types';
 import './Dashboard.scss';
 
@@ -15,7 +16,7 @@ export default function Dashboard() {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [refreshTrigger, setRefreshTrigger] = useState(0);
-
+    const [allHabits, setAllHabits] = useState<Habit[]>([]);
     const triggerRefresh = () => setRefreshTrigger(prev => prev + 1);
 
 
@@ -89,6 +90,7 @@ export default function Dashboard() {
                             onHabitSelect={(h) => setSelectedHabit(prev => prev?.id === h.id ? null : h)}
                             selectedHabitId={selectedHabit?.id || null}
                             refreshTrigger={refreshTrigger}
+                            onHabitsFetched={setAllHabits}
                         />
                     </Card>
                 </div>
@@ -106,10 +108,7 @@ export default function Dashboard() {
                                 onDelete={handleDeleteClick}
                             />
                         ) : (
-                            <div style={{textAlign: 'center', marginTop: 50, opacity: 0.7}}>
-                                <h2>Today's Overview</h2>
-                                <p>(Select a habit...)</p>
-                            </div>
+                            <TodaysOverview habits={allHabits} />
                         )}
                     </Card>
                 </div>
