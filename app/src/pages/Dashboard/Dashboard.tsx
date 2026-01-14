@@ -7,6 +7,7 @@ import HabitDetails from '../../components/HabitDetails/HabitDetails';
 import HabitModal from '../../components/HabitModal/HabitModal';
 import ConfirmDeleteModal from '../../components/ConfirmDeleteModal/ConfirmDeleteModal';
 import TodaysOverview from '../../components/TodaysOverview/TodaysOverview';
+import CommunityInsights from '../../components/CommunityInsights/CommunityInsights'; // Import
 import type {Habit} from '../../types';
 import './Dashboard.scss';
 
@@ -108,7 +109,10 @@ export default function Dashboard() {
                                 onDelete={handleDeleteClick}
                             />
                         ) : (
-                            <TodaysOverview habits={allHabits} />
+                            <div className="overview-wrapper" style={{ display: 'flex', flexDirection: 'column' }}>
+                                <TodaysOverview habits={allHabits} />
+                                <CommunityInsights />
+                            </div>
                         )}
                     </Card>
                 </div>

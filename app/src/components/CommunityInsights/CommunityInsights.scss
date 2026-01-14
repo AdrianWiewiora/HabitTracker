@@ -1,0 +1,129 @@
+@use '@/styles/variables' as *;
+
+.community-insights {
+  width: 100%;
+  // ZMIANA: Zamiast margin-top, dajemy padding po bokach i na dole,
+  // żeby pasował do padding: 20px w TodaysOverview.
+  // Od góry dajemy 0, bo odstęp zrobi nam się naturalnie lub dodamy mały margin.
+  padding: 0 20px 20px 20px;
+
+  font-family: 'Anonymous Pro', monospace;
+  color: $text-color;
+
+  .section-title {
+    text-align: center;
+    font-size: 32px;
+    margin-bottom: 20px; // Zwiększony odstęp, żeby "oddychało" jak wyżej
+    font-weight: bold;
+    letter-spacing: 1px;
+    margin-top: 10px; // Mały odstęp od sekcji powyżej
+  }
+
+  .cards-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+
+    // ZMIANA: Ujednolicenie breakpointa z TodaysOverview (tam jest 1024px)
+    @media (min-width: 1024px) {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .insight-card {
+    background-color: $background2-color;
+    // ZMIANA: Ujednolicenie z overview-card (30px zamiast 25px)
+    border-radius: 30px;
+    padding: 30px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+
+    h3 {
+      font-size: 18px;
+      margin-top: 0;
+      margin-bottom: 20px;
+      text-transform: capitalize;
+      color: $text-color;
+      text-align: center;
+    }
+
+    // --- STYLE DLA TOP HABITS ---
+    &.top-habits {
+      .list {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .habit-item {
+        display: flex;
+        align-items: center;
+        font-size: 16px;
+        padding-bottom: 8px;
+        // Dodana linia oddzielająca, żeby wyglądało czytelniej
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        .rank {
+          font-weight: bold;
+          color: $primary-color;
+          width: 35px;
+        }
+
+        .name {
+          flex: 1;
+          text-align: left;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          margin-right: 10px;
+        }
+
+        .count {
+          opacity: 0.7;
+          font-size: 14px;
+          white-space: nowrap;
+        }
+      }
+    }
+
+    // --- STYLE DLA STATS ---
+    &.stats-box {
+      .stat-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+        font-size: 16px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1); // Linia dla spójności
+
+        &:last-child {
+          border-bottom: none;
+          margin-bottom: 0;
+        }
+
+        .label {
+          opacity: 0.8;
+        }
+
+        .value {
+          font-size: 20px;
+          font-weight: bold;
+          color: $secondary-color;
+        }
+      }
+    }
+  }
+
+  &.loading {
+    text-align: center;
+    opacity: 0.6;
+    margin-top: 50px;
+  }
+}

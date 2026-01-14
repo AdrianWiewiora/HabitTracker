@@ -43,16 +43,69 @@
     display: flex;
     flex-direction: column;
     gap: $spacing-lg;
-    overflow-y: auto; // Prawa kolumna też może mieć swój scroll jeśli trzeba
+    overflow: hidden;
 
     .top-card {
       height: 150px;
-      flex-shrink: 0; // Żeby się nie zgniatała
+      flex-shrink: 0;
     }
 
     .bottom-card {
       flex: 1;
+      display: flex;
       min-height: 0;
+      overflow: hidden;
+
+      .overview-wrapper {
+        display: flex;
+        overflow-y: auto;
+        flex-direction: column;
+      }
+    }
+  }
+
+  // --- ZMIANA 3: MOBILE (TELEFONY) ---
+  @media (max-width: 1230px) {
+    height: auto;
+    overflow-y: auto; // Odblokowujemy scroll okna
+
+    .dashboard-grid {
+      display: flex;
+      flex-direction: column;
+      height: auto;
+    }
+
+    // MAGIA: display: contents sprawia, że .left-column i .right-column
+    // "znikają" strukturalnie, a ich dzieci stają się braćmi na jednym poziomie.
+    .left-column, .right-column {
+      display: contents;
+    }
+
+    // Teraz możemy ustawić kolejność dowolnie:
+
+    // 1. Logo (z prawej kolumny) idzie na samą górę
+    .right-column .top-card {
+      order: 1;
+      height: auto;
+      margin-bottom: 20px; // Odstęp pod logo
+      flex-shrink: 0;
+    }
+
+    // 2. Karta z nawykami (z lewej kolumny) idzie pod logo
+    .left-column .card {
+      order: 2;
+      height: auto;
+      overflow: visible;
+      flex: none;
+      margin-bottom: 20px; // Odstęp między sekcjami
+    }
+
+    // 3. Dolna karta (z prawej kolumny) idzie na sam dół
+    .right-column .bottom-card {
+      order: 3;
+      height: auto;
+      overflow: visible;
+      flex: none;
     }
   }
 }

@@ -8,6 +8,9 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+
+  scrollbar-width: thin;
+  scrollbar-color: #444 transparent;
 }
 
 // body / root
@@ -49,4 +52,23 @@ h1, h2, h3, h4, h5, h6 {
 // listy
 ul, ol {
   list-style: none;
+}
+
+// paski
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px; // Dla scrolli poziomych
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #444;
+  border-radius: 4px;
+
+  &:hover {
+    background-color: #555; // Efekt najechania
+  }
 }
