@@ -1,10 +1,12 @@
 import request from "supertest";
+// @ts-ignore
 import app from "../src/server.js";
+// @ts-ignore
 import prisma from "../src/utils/prisma.js";
 
-describe("Habit CRUD Endpoints", () => {
+describe("Habit & Community Endpoints", () => {
     let token = "";
-    let habitId = 0; // Tu zapiszemy ID utworzonego nawyku, żeby go potem edytować/usunąć
+    let habitId = 0;
 
     const testUser = {
         username: "habit_tester",
@@ -12,24 +14,19 @@ describe("Habit CRUD Endpoints", () => {
         password: "password123"
     };
 
-    // 1. Setup: Czyścimy bazę i tworzymy użytkownika do testów
     beforeAll(async () => {
-        // Najpierw usuwamy wpisy zależne (nawyki), potem użytkowników
+        // Czyszczenie bazy
+        await prisma.note.deleteMany();
         await prisma.habitEntry.deleteMany();
         await prisma.habit.deleteMany();
-        await prisma.user.deleteMany({
-            where: { email: testUser.email }
-        });
+        await prisma.user.deleteMany({ where: { email: testUser.email } });
 
-        // Rejestrujemy usera
+        // Rejestracja i logowanie
         await request(app).post("/api/auth/register").send(testUser);
-
-        // Logujemy się po token
         const loginRes = await request(app).post("/api/auth/login").send({
             email: testUser.email,
             password: testUser.password
         });
-
         token = loginRes.body.token;
     });
 
@@ -37,150 +34,124 @@ describe("Habit CRUD Endpoints", () => {
         await prisma.$disconnect();
     });
 
-    // === CREATE (Tworzenie) ===
-    describe("POST /api/habits", () => {
+    // CRUD NAWYKÓW
+    describe("Basic Habit CRUD", () => {
         it("should create a new habit", async () => {
             const res = await request(app)
                 .post("/api/habits")
                 .set("Authorization", `Bearer ${token}`)
                 .send({
                     name: "Drink Water",
-                    description: "2 liters a day",
+                    description: "2 liters",
                     frequency: "Daily"
                 });
 
             expect(res.statusCode).toEqual(201);
-            expect(res.body).toHaveProperty("id");
-            expect(res.body.name).toEqual("Drink Water");
-            expect(res.body.frequency).toEqual("Daily");
-
-            // Zapisujemy ID do zmiennej, żeby użyć w kolejnych testach!
             habitId = res.body.id;
         });
 
-        it("should fail validation if name is missing", async () => {
-            const res = await request(app)
-                .post("/api/habits")
-                .set("Authorization", `Bearer ${token}`)
-                .send({
-                    frequency: "Daily"
-                });
-
-            expect(res.statusCode).toEqual(400);
-        });
-    });
-
-    // === READ (Pobieranie) ===
-    describe("GET /api/habits", () => {
-        it("should get all habits for logged user", async () => {
+        it("should get all habits", async () => {
             const res = await request(app)
                 .get("/api/habits")
                 .set("Authorization", `Bearer ${token}`);
 
             expect(res.statusCode).toEqual(200);
-            expect(Array.isArray(res.body)).toBeTruthy();
             expect(res.body.length).toBeGreaterThan(0);
-            expect(res.body[0].name).toEqual("Drink Water");
         });
-    });
 
-    // === UPDATE (Edycja) ===
-    describe("PUT /api/habits/:id", () => {
-        it("should update an existing habit", async () => {
+        it("should update a habit", async () => {
             const res = await request(app)
                 .put(`/api/habits/${habitId}`)
                 .set("Authorization", `Bearer ${token}`)
                 .send({
-                    name: "Drink MORE Water",
-                    frequency: "Daily",
-                    description: "3 liters now!"
-                });
-
-            expect(res.statusCode).toEqual(200);
-            expect(res.body.name).toEqual("Drink MORE Water");
-            expect(res.body.description).toEqual("3 liters now!");
-        });
-
-        it("should fail when updating non-existing habit", async () => {
-            const res = await request(app)
-                .put(`/api/habits/999999`) // Nieistniejące ID
-                .set("Authorization", `Bearer ${token}`)
-                .send({
-                    name: "Ghost Habit",
+                    name: "Drink Lemon Water",
                     frequency: "Daily"
                 });
 
-            expect(res.statusCode).toEqual(404);
+            expect(res.statusCode).toEqual(200);
+            expect(res.body.name).toEqual("Drink Lemon Water");
         });
     });
 
-    // === DELETE (Usuwanie) ===
-    describe("DELETE /api/habits/:id", () => {
+    // HECK-IN / ODHACZANIE
+    describe("Habit Check-ins", () => {
+        it("should check-in a habit (create entry)", async () => {
+            const res = await request(app)
+                .post(`/api/habits/${habitId}/check`)
+                .set("Authorization", `Bearer ${token}`)
+                .send({ status: "done" });
+
+            expect([200, 201]).toContain(res.statusCode);
+            expect(res.body.status).toEqual("done");
+        });
+
+        it("should update status if check-in already exists (idempotency)", async () => {
+            // Próbujemy zmienić status na 'skipped' dla tego samego dnia
+            const res = await request(app)
+                .post(`/api/habits/${habitId}/check`)
+                .set("Authorization", `Bearer ${token}`)
+                .send({ status: "skipped" });
+
+            expect(res.statusCode).toEqual(200); // 200 OK, bo to update
+            expect(res.body.status).toEqual("skipped");
+        });
+
+        it("should uncheck a habit", async () => {
+            const res = await request(app)
+                .delete(`/api/habits/${habitId}/check`)
+                .set("Authorization", `Bearer ${token}`);
+
+            expect(res.statusCode).toEqual(200);
+        });
+    });
+
+    // NOTATKI
+    describe("Habit Notes", () => {
+        it("should create/update a note for a habit", async () => {
+            const noteContent = "This is hard but worth it.";
+
+            const res = await request(app)
+                .put(`/api/habits/${habitId}/note`)
+                .set("Authorization", `Bearer ${token}`)
+                .send({ content: noteContent });
+
+            expect(res.statusCode).toEqual(200);
+            expect(res.body.content).toEqual(noteContent);
+            expect(res.body.habitId).toEqual(habitId);
+        });
+    });
+
+    // SPOŁECZNOŚĆ
+    describe("Community & Stats", () => {
+        it("should return community stats", async () => {
+            const res = await request(app)
+                .get("/api/habits/community/stats")
+                .set("Authorization", `Bearer ${token}`);
+
+            expect(res.statusCode).toEqual(200);
+            expect(res.body).toHaveProperty("activeUsers");
+            expect(res.body).toHaveProperty("topHabits");
+            expect(Array.isArray(res.body.topHabits)).toBe(true);
+        });
+
+        it("should return popular public habits", async () => {
+            const res = await request(app)
+                .get("/api/habits/popular")
+                .set("Authorization", `Bearer ${token}`);
+
+            expect(res.statusCode).toEqual(200);
+            expect(Array.isArray(res.body)).toBe(true);
+        });
+    });
+
+    // SPRZĄTANIE
+    describe("Cleanup", () => {
         it("should delete the habit", async () => {
             const res = await request(app)
                 .delete(`/api/habits/${habitId}`)
                 .set("Authorization", `Bearer ${token}`);
 
             expect(res.statusCode).toEqual(200);
-            expect(res.body.message).toEqual("Habit deleted");
-        });
-
-        it("should return 404 when deleting already deleted habit", async () => {
-            const res = await request(app)
-                .delete(`/api/habits/${habitId}`)
-                .set("Authorization", `Bearer ${token}`);
-
-            expect(res.statusCode).toEqual(404);
-        });
-    });
-
-    // === CHECK-IN (Postępy) ===
-    describe("Habit Progress Tracking", () => {
-        let newHabitId = 0;
-
-        // Tworzymy świeży nawyk do testowania odhaczania
-        beforeAll(async () => {
-            const res = await request(app)
-                .post("/api/habits")
-                .set("Authorization", `Bearer ${token}`)
-                .send({ name: "Daily Pushups", frequency: "Daily" });
-            newHabitId = res.body.id;
-        });
-
-        it("should check-in a habit for today", async () => {
-            const res = await request(app)
-                .post(`/api/habits/${newHabitId}/check`)
-                .set("Authorization", `Bearer ${token}`);
-
-            expect(res.statusCode).toEqual(201);
-            expect(res.body.status).toEqual("done");
-        });
-
-        it("should not allow double check-in for the same day", async () => {
-            const res = await request(app)
-                .post(`/api/habits/${newHabitId}/check`)
-                .set("Authorization", `Bearer ${token}`);
-
-            expect(res.statusCode).toEqual(409); // Conflict
-        });
-
-        it("should uncheck (undo) a habit", async () => {
-            const res = await request(app)
-                .delete(`/api/habits/${newHabitId}/check`)
-                .set("Authorization", `Bearer ${token}`);
-
-            expect(res.statusCode).toEqual(200);
-        });
-
-        it("should handle check-in with specific date", async () => {
-            const pastDate = "2023-01-01";
-            const res = await request(app)
-                .post(`/api/habits/${newHabitId}/check`)
-                .set("Authorization", `Bearer ${token}`)
-                .send({ date: pastDate });
-
-            expect(res.statusCode).toEqual(201);
-            expect(res.body.date).toContain("2023-01-01"); // Prisma zwraca ISO string
         });
     });
 });

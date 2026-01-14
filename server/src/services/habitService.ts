@@ -15,7 +15,7 @@ export const getHabitsByUserId = async (userId: number) => {
     });
 };
 
-// Pobieranie jednego (do sprawdzania czy istnieje)
+// Pobieranie jednego
 export const getHabitById = async (habitId: number) => {
     return prisma.habit.findUnique({
         where: { id: habitId }
@@ -47,15 +47,14 @@ export const deleteHabit = async (habitId: number) => {
     ]);
 };
 
-// === SEKCJA WPISÓW (ENTRIES) ===
-
+// === SEKCJA WPISÓW ===
 export const addHabitEntry = async (habitId: number, userId: number, date: Date) => {
     return prisma.habitEntry.create({
         data: {
             habitId,
             userId,
             date,
-            status: "done" // Domyślnie 'done', bo tak masz w Enumie
+            status: "done"
         }
     });
 };
@@ -70,11 +69,10 @@ export const removeHabitEntry = async (habitId: number, userId: number, date: Da
     });
 };
 
-// Sprawdzenie czy wpis już istnieje (żeby nie wywalić błędu 500 przy dublu, tylko ładne info)
 export const getHabitEntry = async (habitId: number, userId: number, date: Date) => {
     return prisma.habitEntry.findUnique({
         where: {
-            habitId_userId_date: { // To jest nazwa klucza złożonego w Prisma
+            habitId_userId_date: {
                 habitId,
                 userId,
                 date
@@ -100,6 +98,43 @@ export const upsertHabitEntry = async (habitId: number, userId: number, date: Da
             userId,
             date,
             status: status
+        }
+    });
+};
+
+export const getPopularHabitsStats = async () => {
+    const publicHabits = await prisma.habit.findMany({
+        where: { isPrivate: false }
+    });
+
+    const results = await Promise.all(publicHabits.map(async (habit) => {
+        const count = await prisma.habit.count({
+            where: {
+                name: habit.name,
+                isPrivate: true
+            }
+        });
+        return { ...habit, usersCount: count };
+    }));
+
+    return results
+        .sort((a, b) => b.usersCount - a.usersCount)
+        .slice(0, 5);
+};
+
+export const upsertNote = async (habitId: number, userId: number, content: string) => {
+    return prisma.note.upsert({
+        where: {
+            habitId_userId: {
+                habitId,
+                userId
+            }
+        },
+        update: { content },
+        create: {
+            habitId,
+            userId,
+            content
         }
     });
 };

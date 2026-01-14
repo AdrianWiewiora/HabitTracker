@@ -1,4 +1,3 @@
-// src/models/userModel.ts
 import prisma from "../utils/prisma.js";
 import { Prisma } from "../generated/prisma/client.js";
 
@@ -17,5 +16,11 @@ export const findUserByEmail = async (email: string) => {
 export const findUserByUsername = async (username: string) => {
     return prisma.user.findUnique({
         where: {username},
+    });
+};
+
+export const findUserById = async (id: number) => {
+    return prisma.user.findUnique({
+        where: { id },
     });
 };
