@@ -1,0 +1,50 @@
+@use '@/styles/variables' as *;
+
+.habit-details-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  font-family: 'Anonymous Pro', monospace;
+  font-weight: bold;
+  text-align: center;
+  color: $text-color;
+  padding: 0 10px;
+
+  .title-64 {
+    font-size: 48px;
+    font-family: 'Anonymous Pro', monospace;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 0;
+    color: $text-color;
+  }
+
+  .details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; // Dwie kolumny
+    grid-template-rows: 1fr 1fr;    // Dwa wiersze
+    gap: 20px; // Odstęp między kartami
+    flex: 1; // Rozciągnij na dostępną wysokość
+    min-height: 0; // Fix dla scrolla wewnątrz grida
+  }
+
+  // Wspólny styl dla wszystkich 4 kart (Sub-komponentów)
+  // Możemy go używać wewnątrz sub-komponentów jako .detail-card
+  .detail-card {
+    background-color: #2A2A2A; // Ciemnoszary (nieco jaśniejszy niż tło strony)
+    border-radius: 20px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    overflow: hidden;
+
+    h3 {
+      font-size: 20px;
+      text-align: center;
+      margin-bottom: 20px;
+      color: $text-color;
+    }
+  }
+}

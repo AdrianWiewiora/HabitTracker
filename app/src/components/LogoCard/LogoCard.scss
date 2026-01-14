@@ -1,0 +1,114 @@
+@use '@/styles/variables' as *;
+
+.logo-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  position: relative;
+  overflow: visible !important;
+
+  .logo-wrapper {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    margin: 4px 15px;
+
+    img {
+      max-height: 100%;
+      width: auto;
+      object-fit: contain;
+    }
+  }
+
+  // Prawa strona z ikonką
+  .user-section {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    .user-icon-btn {
+      background: none;
+      border: none;
+      color: $text-color;
+      cursor: pointer;
+      padding: 0;
+      transition: transform 0.2s, color 0.2s;
+      display: flex;
+
+      &:hover {
+        transform: scale(1.1);
+        color: $primary-color;
+      }
+    }
+
+    // --- DROPDOWN MENU ---
+    .user-dropdown {
+      position: absolute;
+      top: 45px;
+      right: 0;
+      width: 200px;
+
+      background-color: $background3-color;
+      border: 1px solid $primary-color;
+      border-radius: 12px;
+      padding: 10px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      z-index: 999;
+
+      font-family: 'Anonymous Pro', monospace;
+      color: $text-color;
+      animation: fadeIn 0.2s ease-out;
+
+      .user-info {
+        padding: 5px 10px;
+        display: flex;
+        flex-direction: column;
+
+        small {
+          font-size: 12px;
+          color: rgba($text-color, 0.5);
+        }
+        strong { font-size: 16px; }
+      }
+
+      .divider {
+        height: 1px;
+        background-color: rgba($text-color, 0.2);
+        margin: 8px 0;
+      }
+
+      .menu-item {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px;
+        border: none;
+        background: none;
+        color: $text-color;
+        font-family: 'Anonymous Pro', monospace;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 6px;
+        transition: background 0.2s;
+
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        &.logout {
+          color: $error-color;
+          &:hover {
+            background-color: rgba($error-color, 0.1);
+          }
+        }
+      }
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

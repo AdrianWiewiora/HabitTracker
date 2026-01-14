@@ -1,0 +1,239 @@
+@use '@/styles/variables' as *;
+@use "sass:color";
+
+.auth-layout {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background-color: $background2-color;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  // --- TŁO ---
+  .background-squares {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    pointer-events: none;
+
+    .square {
+      position: absolute;
+      border-radius: $border-radius-md;
+      opacity: 0.8;
+      &.green { background-color: $primary-color; }
+      &.orange { background-color: $secondary-color; }
+    }
+  }
+
+  // --- KONTENER GŁÓWNY ---
+  .auth-content {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: $spacing-lg;
+    width: 100%;
+    max-width: 450px;
+    padding: $spacing-md;
+
+    .logo-container {
+      .text-logo {
+        font-family: $font-momo;
+        font-size: 64px;
+        font-weight: bold;
+        background-color: rgba($background1-color, 0.8);
+        padding: 0 30px;
+        border-radius: 40px;
+        border: 1px solid $primary-color;
+        .orange { color: $secondary-color; }
+        .green { color: $primary-color; }
+      }
+    }
+
+    .auth-card {
+      background-color: rgba($background2-color, 0.85);
+      border: 1px solid $primary-color;
+      border-radius: 30px;
+      padding: 40px;
+      width: 100%;
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      backdrop-filter: blur(4px);
+
+      h2 {
+        text-align: center;
+        font-size: 32px;
+        margin-bottom: $spacing-xl;
+        letter-spacing: 2px;
+      }
+
+      // --- WSPÓLNE STYLE FORMULARZA (Przeniesione tutaj) ---
+      .auth-form {
+        display: flex;
+        flex-direction: column;
+        gap: $spacing-lg;
+
+        // Komunikaty (Error / Success)
+        .message {
+          text-align: center;
+          font-size: 0.9rem;
+          font-weight: bold;
+          padding: 10px;
+          border-radius: 15px;
+          margin-bottom: 5px;
+
+          &.error {
+            color: $error-color;
+            background-color: rgba($error-color, 0.1);
+            border: 1px solid rgba($error-color, 0.2);
+          }
+          &.success {
+            color: #2ecc71;
+            background-color: rgba(46, 204, 113, 0.1);
+            border: 1px solid rgba(46, 204, 113, 0.2);
+          }
+        }
+
+        // Inputy
+        .input-group {
+          position: relative;
+          display: flex;
+          align-items: center;
+
+          .icon {
+            position: absolute;
+            left: 15px;
+            color: $secondary-color;
+            font-size: 1.2rem;
+            z-index: 1;
+            display: flex;
+          }
+
+          input {
+            width: 100%;
+            background-color: transparent;
+            border: 1px solid $secondary-color;
+            border-radius: 25px;
+            padding: 12px 15px 12px 45px;
+            color: $text-color;
+            font-family: $font-momo;
+            font-size: 1rem;
+            outline: none;
+            transition: box-shadow 0.3s ease;
+
+            &::placeholder {
+              color: rgba($text-color, 0.7);
+              font-family: monospace; // lub font-momo jeśli wolisz
+            }
+
+            &:focus {
+              box-shadow: 0 0 8px rgba($secondary-color, 0.4);
+            }
+
+            &:disabled {
+              opacity: 0.5;
+              cursor: not-allowed;
+            }
+          }
+        }
+
+        // Przyciski
+        .submit-btn {
+          background-color: $primary-color;
+          color: #fff;
+          font-weight: bold;
+          font-size: 1.1rem;
+          border: none;
+          border-radius: 25px;
+          padding: 12px;
+          margin-top: $spacing-md;
+          text-transform: uppercase;
+          transition: transform 0.2s, background-color 0.2s;
+          cursor: pointer;
+
+          &:hover {
+            transform: scale(1.02);
+            background-color: color.adjust($primary-color, $lightness: 5%);
+          }
+
+          &:disabled {
+            background-color: #2ecc71; // Zielony przy sukcesie
+            cursor: default;
+            transform: none;
+          }
+        }
+
+        // Linki pod formularzem
+        .auth-footer {
+          text-align: center;
+          font-size: 0.9rem;
+          margin-top: $spacing-sm;
+          color: rgba($text-color, 0.8);
+
+          .link-highlight {
+            color: $primary-color;
+            font-weight: bold;
+            margin-left: 5px;
+          }
+        }
+
+        // Sekcje specyficzne dla logowania (nadal mogą tu być, nie przeszkadzają w rejestracji)
+        .forgot-password {
+          text-align: right;
+          font-size: 0.8rem;
+          a {
+            color: rgba($text-color, 0.7);
+            &:hover { color: $text-color; }
+          }
+        }
+
+        .divider {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: rgba($text-color, 0.6);
+          font-size: 0.9rem;
+
+          &::before, &::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba($text-color, 0.2);
+            margin: 0 10px;
+          }
+        }
+
+        .social-login {
+          display: flex;
+          gap: 15px;
+
+          .social-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 10px;
+            border-radius: 25px;
+            border: 1px solid rgba($text-color, 0.2);
+            background: transparent;
+            color: $text-color;
+            font-size: 0.9rem;
+            transition: background 0.3s;
+            cursor: pointer;
+
+            &:hover {
+              background: rgba($text-color, 0.1);
+            }
+
+            &.google svg { color: #DB4437; }
+            &.facebook svg { color: #4267B2; }
+          }
+        }
+      }
+    }
+  }
+}

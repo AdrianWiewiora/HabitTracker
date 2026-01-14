@@ -1,8 +1,45 @@
 import { Router } from "express";
-import { getHabits } from "../controllers/habitController.js";
+import {
+    checkHabit,
+    create,
+    getAll,
+    getPopular,
+    remove,
+    uncheckHabit,
+    update,
+    updateNote
+} from "../controllers/habitController.js";
+import { authenticateToken } from "../middlewares/authMiddleware.js";
+import { habitValidators, validate } from "../middlewares/validators.js";
+import {getCommunityStats} from "../controllers/communityController.js";
 
 const habitsRouter = Router();
 
-habitsRouter.get("/", getHabits);
+habitsRouter.use(authenticateToken);
+
+habitsRouter.get("/", getAll);
+
+habitsRouter.get("/popular", getPopular);
+
+habitsRouter.post(
+    "/",
+    habitValidators,
+    validate,
+    create
+);
+
+habitsRouter.put(
+    "/:id",
+    habitValidators,
+    validate,
+    update
+);
+
+habitsRouter.delete("/:id", remove);
+
+habitsRouter.post("/:id/check", checkHabit);
+habitsRouter.delete("/:id/check", uncheckHabit);
+habitsRouter.put("/:id/note", updateNote);
+habitsRouter.get("/community/stats", getCommunityStats);
 
 export default habitsRouter;

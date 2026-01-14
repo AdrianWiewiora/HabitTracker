@@ -1,0 +1,72 @@
+// global.scss
+@use './variables' as *;
+
+// reset / normalize
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+
+  scrollbar-width: thin;
+  scrollbar-color: #444 transparent;
+}
+
+// body / root
+body {
+  font-family: 'Anonymous Pro', monospace;
+  font-weight: bold;
+  background-color: $background2-color;
+  color: $text-color;
+  line-height: 1.5;
+}
+
+// linki
+a {
+  color: $primary-color;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+// przyciski
+button {
+  font-family: 'Anonymous Pro', monospace;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: $border-radius-md;
+  padding: $spacing-sm $spacing-md;
+}
+
+// typografia globalna
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Anonymous Pro', monospace;
+  font-weight: bold;
+  color: $text-color;
+  margin-bottom: $spacing-md;
+}
+
+// listy
+ul, ol {
+  list-style: none;
+}
+
+// paski
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px; // Dla scrolli poziomych
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #444;
+  border-radius: 4px;
+
+  &:hover {
+    background-color: #555; // Efekt najechania
+  }
+}

@@ -1,0 +1,59 @@
+@use '@/styles/variables' as *;
+
+.notes-reflections-card {
+  // Bazuje na wspólnym stylu detail-card
+  background-color: $background2-color;
+  border-radius: 20px;
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  color: $text-color;
+  font-family: 'Anonymous Pro', monospace;
+
+  .card-title {
+    text-align: center;
+    font-size: 26px;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-weight: bold;
+    letter-spacing: 1px;
+  }
+
+  .notes-area {
+    flex: 1; // Zajmij całą dostępną przestrzeń
+    background-color: transparent;
+    border: none; // Brak ramki, wygląda jak czysty tekst
+    resize: none; // Blokada zmiany rozmiaru
+
+    font-family: 'Anonymous Pro', monospace;
+    font-size: 16px;
+    color: rgba($text-color, 0.9);
+    line-height: 1.5;
+    outline: none;
+
+    // Pasek przewijania wewnątrz notatki
+    &::-webkit-scrollbar { width: 6px; }
+    &::-webkit-scrollbar-thumb { background-color: #444; border-radius: 3px; }
+
+    &::placeholder {
+      color: rgba($text-color, 0.3);
+      font-style: italic;
+    }
+  }
+
+  .status-indicator {
+    text-align: right;
+    font-size: 12px;
+    color: rgba($text-color, 0.4); // Domyślnie szary (dla Saved)
+    height: 15px;
+    margin-top: 5px;
+    transition: color 0.3s ease;
+
+    // Kiedy użytkownik pisze:
+    &.unsaved {
+      color: #eab308; // Żółty/Pomarańczowy (jak ikona edycji)
+      font-style: italic;
+    }
+  }
+}

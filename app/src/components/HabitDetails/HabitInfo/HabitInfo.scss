@@ -1,0 +1,91 @@
+@use '@/styles/variables' as *;
+
+.habit-info-card {
+  // Dziedziczy style .detail-card z rodzica, ale tutaj dodajemy specyficzne
+  background-color: $background2-color;
+  border-radius: 20px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  color: $text-color;
+  font-family: 'Anonymous Pro', monospace;
+
+  // === SEKCJA INFORMACJI (Grid label-value) ===
+  .info-grid {
+    flex: 1; // Rozpycha, żeby przyciski były na dole
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 20px;
+
+    .info-row {
+      display: grid;
+      grid-template-columns: 140px 1fr; // Lewa kolumna stała, prawa reszta
+      align-items: flex-start; // Żeby description nie rozwalało układu
+      font-size: 20px;
+      font-family: 'Anonymous Pro', monospace;
+      font-weight: bold;
+
+      .label {
+        color: $text-color;
+        font-weight: bold;
+      }
+
+      .value {
+        color: $text-color;
+        font-weight: bold; // Wartości wydają się grubsze
+
+        &.desc {
+          font-size: 16px;
+          font-weight: bold;
+        }
+      }
+    }
+  }
+
+  // === SEKCJA PRZYCISKÓW ===
+  .actions-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; // Dwie kolumny przycisków
+    gap: 15px; // Odstęp między guzikami
+    margin-top: auto; // Dopycha do dołu
+
+    .action-btn {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 7px 8px;
+      border: none;
+      border-radius: 8px;
+
+      font-family: 'Anonymous Pro', monospace;
+      font-size: 20px;
+      font-weight: bold;
+      color: $text-color;
+      cursor: pointer;
+      transition: transform 0.2s, filter 0.2s;
+
+      &:active {
+        transform: scale(0.95);
+      }
+
+      &:hover {
+        transform: scale(1.05);
+        filter: brightness(1.15);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      }
+
+      // Warianty kolorystyczne (zgodne z obrazkiem)
+      &.done { background-color: $primary-color; }
+      &.not-done { background-color: $error-color; }
+      &.edit { background-color: $secondary-color; }
+      &.delete { background-color: $error-color; }
+
+      // Ikonki w przyciskach
+      svg {
+        font-size: 20px;
+      }
+    }
+  }
+}
