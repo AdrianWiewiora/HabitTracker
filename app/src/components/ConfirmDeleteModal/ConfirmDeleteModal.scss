@@ -1,0 +1,154 @@
+@use '@/styles/variables' as *;
+@use "sass:color";
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.7); // Ciemne tło pod spodem
+  backdrop-filter: blur(3px); // Lekki blur tła
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-out;
+
+  .modal-content {
+    background-color: $background3-color;
+    max-width: 500px;
+    border: 2px solid $primary-color; // Zielona ramka
+    border-radius: 20px;
+    padding: 30px;
+    font-family: 'Anonymous Pro', monospace;
+    font-weight: bold;
+    color: $text-color;
+    box-shadow: 0 0 20px rgba($primary-color, 0.2);
+    animation: slideUp 0.3s ease-out;
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'Anonymous Pro', monospace;
+      font-weight: bold;
+      font-size: 36px;
+      margin-bottom: 25px;
+
+      h3 {
+        margin: 0;
+        font-size: 28px;
+        color: $primary-color;
+        font-family: 'Anonymous Pro', monospace;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .close-btn {
+        background: none;
+        border: none;
+        color: rgba($text-color, 0.5);
+        font-size: 24px;
+        cursor: pointer;
+        transition: color 0.2s;
+
+        &:hover { color: $error-color; }
+      }
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        font-size: 18px;
+        color: rgba($text-color, 0.9);
+
+        small {
+          font-size: 0.8em;
+          color: rgba($text-color, 0.5);
+          font-weight: normal;
+        }
+      }
+
+      input, textarea, select {
+        width: 100%;
+        background-color: $background2-color; // Ciemniejsze pola
+        border: 1px solid rgba($text-color, 0.2);
+        border-radius: 10px;
+        padding: 12px;
+        font-family: 'Anonymous Pro', monospace;
+        color: $text-color;
+        font-size: 16px;
+        outline: none;
+        transition: border-color 0.2s;
+
+        &::placeholder {
+          font-family: 'Anonymous Pro', monospace;
+          color: rgba($text-color, 0.5);
+          opacity: 1;
+        }
+
+        &:focus {
+          border-color: $primary-color;
+          box-shadow: 0 0 5px rgba($primary-color, 0.3);
+        }
+      }
+
+      textarea { resize: vertical; }
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 15px;
+      margin-top: 30px;
+
+      button {
+        flex: 1;
+        padding: 12px;
+        border-radius: 50px; // Pastylki
+        border: none;
+        font-family: 'Anonymous Pro', monospace;
+        font-weight: bold;
+        font-size: 18px;
+        cursor: pointer;
+        transition: transform 0.1s, opacity 0.2s;
+
+        &:active { transform: scale(0.98); }
+      }
+
+      .cancel-btn {
+        background-color: rgba(255, 255, 255, 0.1);
+        color: $text-color;
+        &:hover { background-color: rgba(255, 255, 255, 0.2); }
+      }
+
+      .save-btn {
+        background-color: $primary-color;
+        color: white; // Lub czarny, zależy jak wolisz
+        &:hover { opacity: 0.9; }
+      }
+
+      .delete-confirm-btn {
+        background-color: $error-color;
+        color: white;
+        &:hover { opacity: 0.9; transform: scale(1.05);}
+      }
+    }
+  }
+}
+
+// Proste animacje wejścia
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}

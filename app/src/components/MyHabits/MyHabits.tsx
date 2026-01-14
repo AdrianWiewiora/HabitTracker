@@ -6,7 +6,13 @@ import HabitModal from '../HabitModal/HabitModal';
 import './MyHabits.scss';
 import PopularHabits from "../PopularHabits/PopularHabits.tsx";
 
-export default function MyHabits() {
+interface MyHabitsProps {
+    onHabitSelect: (habit: Habit) => void;
+    selectedHabitId: number | null;
+    refreshTrigger?: number;
+}
+
+export default function MyHabits({ onHabitSelect, selectedHabitId, refreshTrigger }: MyHabitsProps) {
     // --- STATE ---
     const [habits, setHabits] = useState<Habit[]>([]);
     const [loading, setLoading] = useState(true);
@@ -27,7 +33,7 @@ export default function MyHabits() {
 
     useEffect(() => {
         fetchHabits();
-    }, []);
+    }, [refreshTrigger]);
 
     // --- HANDLERY (CHECK / SKIP) ---
     const handleCheck = async (habit: Habit) => {
@@ -108,6 +114,8 @@ export default function MyHabits() {
                             habit={habit}
                             onCheck={handleCheck}
                             onSkip={handleSkip}
+                            isSelected={habit.id === selectedHabitId}
+                            onClick={() => onHabitSelect(habit)}
                         />
                     ))
                 )}

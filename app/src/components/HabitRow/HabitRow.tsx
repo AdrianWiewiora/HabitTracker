@@ -6,6 +6,8 @@ interface HabitRowProps {
     habit: Habit;
     onCheck: (habit: Habit) => void;
     onSkip: (habit: Habit) => void;
+    isSelected?: boolean;
+    onClick?: () => void;
 }
 
 // Funkcja pomocnicza: Zamienia datę na string "YYYY-MM-DD" w czasie LOKALNYM
@@ -14,12 +16,10 @@ const getDateKey = (dateInput: string | Date) => {
     return date.toLocaleDateString('en-CA');
 };
 
-export default function HabitRow({ habit, onCheck, onSkip }: HabitRowProps) {
+export default function HabitRow({ habit, onCheck, onSkip, isSelected, onClick }: HabitRowProps) {
     const today = new Date();
-    // Ważne: operujemy na dacie lokalnej w przeglądarce
     const todayKey = getDateKey(today);
 
-    // Znajdź dzisiejszy wpis po kluczu daty
     const todayEntry = habit.entries.find(e => getDateKey(e.date) === todayKey);
 
     const isDone = todayEntry?.status === 'done';
@@ -27,22 +27,14 @@ export default function HabitRow({ habit, onCheck, onSkip }: HabitRowProps) {
 
     const renderRecentDays = () => {
         const squares = [];
-
-        // Data stworzenia nawyku - musimy ją znormalizować do północy,
-        // żeby porównywać same dni, a nie godziny.
         const createdAt = new Date(habit.createdAt);
         createdAt.setHours(0,0,0,0);
 
-        // Pętla: 4 dni temu ... do Dzisiaj (0)
         for (let i = 4; i >= 0; i--) {
-            const d = new Date(today); // Kopia dzisiejszej daty
-            d.setDate(d.getDate() - i); // Cofamy się o 'i' dni
-
-            // Normalizujemy dzień pętli do północy dla pewności porównania
+            const d = new Date(today);
+            d.setDate(d.getDate() - i);
             const dTime = new Date(d);
             dTime.setHours(0,0,0,0);
-
-            // Jeśli dzień z pętli jest wcześniejszy niż dzień stworzenia nawyku
             if (dTime.getTime() < createdAt.getTime()) {
                 squares.push(<div key={i} className="status-box placeholder"></div>);
                 continue;
@@ -73,7 +65,10 @@ export default function HabitRow({ habit, onCheck, onSkip }: HabitRowProps) {
     };
 
     return (
-        <div className="habit-row">
+        <div
+            className={`habit-row ${isSelected ? 'selected' : ''}`}
+            onClick={onClick}
+        >
             <div className="col-name" title={habit.name}>{habit.name}</div>
 
             <div className="col-recent">
@@ -83,14 +78,20 @@ export default function HabitRow({ habit, onCheck, onSkip }: HabitRowProps) {
             <div className="col-today">
                 <button
                     className={`icon-btn check ${isDone ? 'active' : ''}`}
-                    onClick={() => onCheck(habit)}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        onCheck(habit);
+                    }}
                 >
                     <FaCheck size={22}/>
                 </button>
 
                 <button
                     className={`icon-btn cross ${isSkipped ? 'active' : ''}`}
-                    onClick={() => onSkip(habit)}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        onSkip(habit);
+                    }}
                 >
                     <FaTimes size={22}/>
                 </button>

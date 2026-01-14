@@ -30,11 +30,21 @@ export const updateHabit = async (habitId: number, data: Prisma.HabitUpdateInput
     });
 };
 
-// Usuwanie (tylko jeśli należy do usera)
+// Usuwanie
 export const deleteHabit = async (habitId: number) => {
-    return prisma.habit.delete({
-        where: { id: habitId }
-    });
+    return prisma.$transaction([
+        prisma.habitEntry.deleteMany({
+            where: { habitId }
+        }),
+
+        prisma.note.deleteMany({
+            where: { habitId }
+        }),
+
+        prisma.habit.delete({
+            where: { id: habitId }
+        })
+    ]);
 };
 
 // === SEKCJA WPISÓW (ENTRIES) ===
