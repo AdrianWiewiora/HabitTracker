@@ -2,12 +2,12 @@
   // Visit https://aka.ms/tsconfig to read more about this file
   "compilerOptions": {
     // File Layout
-    // "rootDir": "./src",
-    // "outDir": "./dist",
+    "rootDir": "./src",    // Gdzie jest kod źródłowy
+    "outDir": "./dist",   // Gdzie mają trafić gotowe pliki
 
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
-    "module": "esnext",
+    "module": "NodeNext",
     "target": "esnext",
     //"types": [],
     // For nodejs:

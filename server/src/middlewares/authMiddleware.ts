@@ -4,7 +4,6 @@ import jwt from "jsonwebtoken";
 
 const JWT_SECRET = process.env.JWT_SECRET || "default_secret";
 
-// Rozszerzamy typ Request, żebyśmy mogli zapisać w nim dane z tokena
 export interface AuthRequest extends Request {
     user?: {
         id: number;
@@ -13,7 +12,7 @@ export interface AuthRequest extends Request {
 }
 
 export const authenticateToken = (req: AuthRequest, res: Response, next: NextFunction): void => {
-    // 1. Pobieramy nagłówek Authorization
+    // obieramy nagłówek Authorization
     const authHeader = req.headers["authorization"];
 
     // Nagłówek wygląda tak: "Bearer <token>", więc bierzemy drugi człon

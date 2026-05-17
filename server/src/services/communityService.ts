@@ -30,9 +30,11 @@ export const getCommunityStatsService = async () => {
     });
 
     const habitUsersMap: Record<string, Set<number>> = {};
-    entries.forEach(entry => {
+    entries.forEach((entry: { userId: number; habit: { name: string } }) => {
         const name = entry.habit.name.trim();
-        if (!habitUsersMap[name]) habitUsersMap[name] = new Set();
+        if (!habitUsersMap[name]) {
+            habitUsersMap[name] = new Set();
+        }
         habitUsersMap[name].add(entry.userId);
     });
 

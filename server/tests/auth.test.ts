@@ -1,8 +1,6 @@
 import request from "supertest";
-// @ts-ignore
-import app from "../src/server";
-// @ts-ignore
-import prisma from "../src/utils/prisma";
+import app from "../src/server.js";
+import prisma from "../src/utils/prisma.js";
 
 describe("Auth Endpoints", () => {
     const testUser = {

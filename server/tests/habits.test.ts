@@ -1,7 +1,5 @@
 import request from "supertest";
-// @ts-ignore
 import app from "../src/server.js";
-// @ts-ignore
 import prisma from "../src/utils/prisma.js";
 
 describe("Habit & Community Endpoints", () => {

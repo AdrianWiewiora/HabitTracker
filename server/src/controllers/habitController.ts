@@ -64,8 +64,7 @@ export const getAll = async (req: AuthRequest, res: Response): Promise<void> => 
 
 export const update = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
-        // @ts-ignore
-        const habitId = parseInt(req.params.id);
+        const habitId = parseInt(req.params.id!);
         const userId = req.user!.id;
         const { name, description, frequency } = req.body;
         const habit = await getHabitById(habitId);
@@ -86,8 +85,7 @@ export const update = async (req: AuthRequest, res: Response): Promise<void> => 
 
 export const remove = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
-        // @ts-ignore
-        const habitId = parseInt(req.params.id);
+        const habitId = parseInt(req.params.id!);
         const userId = req.user!.id;
 
         const habit = await getHabitById(habitId);
@@ -106,8 +104,7 @@ export const remove = async (req: AuthRequest, res: Response): Promise<void> => 
 
 export const checkHabit = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
-        // @ts-ignore
-        const habitId = parseInt(req.params.id);
+        const habitId = parseInt(req.params.id!);
         const userId = req.user!.id;
 
         const { date, status } = req.body || {};
@@ -135,8 +132,7 @@ export const checkHabit = async (req: AuthRequest, res: Response): Promise<void>
 
 export const uncheckHabit = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
-        // @ts-ignore
-        const habitId = parseInt(req.params.id);
+        const habitId = parseInt(req.params.id!);
         const userId = req.user!.id;
         const { date } = req.body || {};
 
@@ -159,8 +155,7 @@ export const uncheckHabit = async (req: AuthRequest, res: Response): Promise<voi
 // Notes
 export const updateNote = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
-        // @ts-ignore
-        const habitId = parseId(req.params.id);
+        const habitId = parseId(req.params.id!);
         const userId = req.user!.id;
         const { content } = req.body;
 

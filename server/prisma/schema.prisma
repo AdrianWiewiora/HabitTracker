@@ -5,19 +5,21 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
+  output        = "../../node_modules/.prisma/client"
 }
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
   id           Int          @id @default(autoincrement())
   username     String       @unique
   email        String       @unique
-  passwordHash String // zamiast password_hash
+  passwordHash String
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
   habits       Habit[]      @relation("CreatedHabits")
@@ -31,7 +33,7 @@ model Habit {
   description String?
   frequency   Frequency
   isPrivate   Boolean      @default(true)
-  createdBy   Int? // relacja optionalna
+  createdBy   Int?
   creator     User?        @relation("CreatedHabits", fields: [createdBy], references: [id])
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt

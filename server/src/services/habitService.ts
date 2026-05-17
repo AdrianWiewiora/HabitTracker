@@ -1,5 +1,6 @@
 import prisma from "../utils/prisma.js";
-import { Prisma } from "../generated/prisma/client.js";
+import { Prisma } from "@prisma/client";
+import type { Habit } from "@prisma/client";
 
 // Tworzenie
 export const createHabit = async (data: Prisma.HabitCreateInput) => {
@@ -107,7 +108,7 @@ export const getPopularHabitsStats = async () => {
         where: { isPrivate: false }
     });
 
-    const results = await Promise.all(publicHabits.map(async (habit) => {
+    const results = await Promise.all(publicHabits.map(async (habit: Habit) => {
         const count = await prisma.habit.count({
             where: {
                 name: habit.name,
@@ -118,7 +119,7 @@ export const getPopularHabitsStats = async () => {
     }));
 
     return results
-        .sort((a, b) => b.usersCount - a.usersCount)
+        .sort((a: {usersCount: number}, b: { usersCount: number }) => b.usersCount - a.usersCount)
         .slice(0, 5);
 };
 

@@ -1,5 +1,4 @@
 // src/middlewares/validators.ts
-// @ts-ignore
 import { body, validationResult } from "express-validator";
 import type { Request, Response, NextFunction } from "express";
 
