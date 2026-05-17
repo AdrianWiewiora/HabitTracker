@@ -34,8 +34,7 @@ export default function Registration() {
         }
 
         try {
-            // @ts-ignore
-            const data = await client<RegisterResponse>('/auth/register', {
+            await client<RegisterResponse>('/auth/register', {
                 body: {
                     email,
                     username,

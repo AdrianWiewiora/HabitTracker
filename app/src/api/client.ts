@@ -1,4 +1,6 @@
 const BASE_URL = "http://localhost:5000/api";
+// const BASE_URL = import.meta.env.VITE_API_URL;
+// const BASE_URL = "https://server-681175579999.us-central1.run.app/api";
 
 interface RequestConfig extends RequestInit {
     body?: any;

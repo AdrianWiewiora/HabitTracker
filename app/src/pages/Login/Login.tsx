@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaEnvelope, FaLock, FaGoogle, FaFacebook } from 'react-icons/fa';
+import { FaEnvelope, FaLock } from 'react-icons/fa';
 import AuthLayout from '../../components/AuthLayout/AuthLayout';
 import { client } from '../../api/client';
 import { useAuth } from '../../context/AuthContext';
@@ -81,23 +81,23 @@ export default function Login() {
                     Login
                 </button>
 
-                <div className="forgot-password">
-                    <a href="#">Forgot Password?</a>
-                </div>
+                {/*<div className="forgot-password">*/}
+                {/*    <a href="#">Forgot Password?</a>*/}
+                {/*</div>*/}
 
-                {/* Sekcja Social Media (zgodnie z projektem) */}
-                <div className="divider">
-                    <span>Or</span>
-                </div>
+                {/*/!* Sekcja Social Media (zgodnie z projektem) *!/*/}
+                {/*<div className="divider">*/}
+                {/*    <span>Or</span>*/}
+                {/*</div>*/}
 
-                <div className="social-login">
-                    <button type="button" className="social-btn google">
-                        <FaGoogle /> Google
-                    </button>
-                    <button type="button" className="social-btn facebook">
-                        <FaFacebook /> Facebook
-                    </button>
-                </div>
+                {/*<div className="social-login">*/}
+                {/*    <button type="button" className="social-btn google">*/}
+                {/*        <FaGoogle /> Google*/}
+                {/*    </button>*/}
+                {/*    <button type="button" className="social-btn facebook">*/}
+                {/*        <FaFacebook /> Facebook*/}
+                {/*    </button>*/}
+                {/*</div>*/}
 
                 <div className="auth-footer">
                     Don't have account? <Link to="/register" className="link-highlight">Sign up</Link>

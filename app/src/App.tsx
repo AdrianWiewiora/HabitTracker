@@ -22,7 +22,7 @@ const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
 function App() {
     return (
         <AuthProvider>
-            <Router>
+            <Router basename="/HabitTracker">
                 <Routes>
                     <Route
                         path="/"

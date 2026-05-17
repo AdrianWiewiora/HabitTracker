@@ -6,6 +6,7 @@ const isDocker = process.env.DOCKER === 'true'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+  base: '/HabitTracker/',
   server: {
     host: isDocker ? '0.0.0.0' : 'localhost',
     port: 5173,
