@@ -35,13 +35,14 @@ export const getPopular = async (req: AuthRequest, res: Response): Promise<void>
 
 export const create = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
-        const { name, description, frequency } = req.body;
+        const { name, description, frequency, reminderTime } = req.body;
         const userId = req.user!.id;
 
         const newHabit = await createHabit({
             name,
             description,
             frequency,
+            reminderTime,
             creator: { connect: { id: userId } }
         });
 
@@ -66,14 +67,14 @@ export const update = async (req: AuthRequest, res: Response): Promise<void> => 
     try {
         const habitId = parseInt(req.params.id!);
         const userId = req.user!.id;
-        const { name, description, frequency } = req.body;
+        const { name, description, frequency, reminderTime } = req.body;
         const habit = await getHabitById(habitId);
         if (!habit || habit.createdBy !== userId) {
             res.status(404).json({ error: "Habit not found" });
             return;
         }
 
-        const updated = await updateHabit(habitId, { name, description, frequency });
+        const updated = await updateHabit(habitId, { name, description, frequency, reminderTime });
         res.json(updated);
 
     } catch (error) {

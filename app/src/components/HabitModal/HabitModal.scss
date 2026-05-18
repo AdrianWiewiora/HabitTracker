@@ -98,6 +98,50 @@
       }
 
       textarea { resize: vertical; }
+
+      &.reminder-group {
+        display: flex;
+        flex-direction: column;
+
+        .checkbox-label {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          cursor: pointer;
+          user-select: none;
+          font-size: 18px;
+
+          input[type="checkbox"] {
+            width: 22px;
+            height: 22px;
+            accent-color: $primary-color;
+            cursor: pointer;
+            width: auto;
+          }
+        }
+        .time-picker-wrapper {
+          margin-top: 15px;
+          display: flex;
+          align-items: center;
+          gap: 15px;
+          animation: fadeIn 0.2s ease-out;
+
+          label {
+            margin-bottom: 0;
+            font-size: 16px;
+            white-space: nowrap;
+          }
+
+          input[type="time"] {
+            max-width: 140px;
+            text-align: center;
+            padding: 8px 12px;
+            font-size: 18px;
+            font-weight: bold;
+          }
+        }
+        
+      }
     }
 
     .modal-actions {

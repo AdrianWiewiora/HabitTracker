@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import {createUser, findUserByEmail, findUserById, findUserByUsername} from "../services/userService.js";
+import {createUser, findUserByEmail, findUserById, findUserByUsername, updateUserPushSubscription} from "../services/userService.js";
 import {AuthRequest} from "../middlewares/authMiddleware.js";
 
 const JWT_SECRET = process.env.JWT_SECRET || "default_secret";
@@ -114,6 +114,26 @@ export const getMe = async (req: AuthRequest, res: Response): Promise<void> => {
         });
     } catch (error) {
         console.error("Error fetching profile:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+
+export const savePushSubscription = async (req: AuthRequest, res: Response): Promise<void> => {
+    try {
+        const userId = req.user!.id;
+        const { subscription } = req.body;
+
+        if (!subscription) {
+            res.status(400).json({ error: "Missing subscription data" });
+            return;
+        }
+
+        // Przekazujemy zadanie do serwisu
+        await updateUserPushSubscription(userId, subscription);
+
+        res.status(200).json({ message: "Push subscription saved successfully" });
+    } catch (error) {
+        console.error("Save push subscription error:", error);
         res.status(500).json({ error: "Internal Server Error" });
     }
 };

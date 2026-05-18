@@ -24,3 +24,10 @@ export const findUserById = async (id: number) => {
         where: { id },
     });
 };
+
+export const updateUserPushSubscription = async (userId: number, subscription: string) => {
+    return prisma.user.update({
+        where: { id: userId },
+        data: { pushSubscription: subscription },
+    });
+};

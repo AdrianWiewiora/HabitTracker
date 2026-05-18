@@ -30,6 +30,7 @@ export interface Habit {
     creatorId: number;
     entries: HabitEntry[];
     notes: Note[];
+    reminderTime?: string | null;
 }
 
 export interface AuthResponse {

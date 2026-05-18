@@ -24,7 +24,9 @@ export default function HabitInfo({ habit, onCheck, onSkip, onEdit, onDelete }: 
                 </div>
                 <div className="info-row">
                     <span className="label">Reminder:</span>
-                    <span className="value">-</span>
+                    <span className="value">
+                        {habit.reminderTime ? habit.reminderTime : "Off"}
+                    </span>
                 </div>
                 <div className="info-row">
                     <span className="label">Description:</span>

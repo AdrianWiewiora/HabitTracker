@@ -7,7 +7,7 @@
 generator client {
   provider      = "prisma-client-js"
   binaryTargets = ["native", "debian-openssl-3.0.x"]
-  output        = "../../node_modules/.prisma/client"
+  output        = "../node_modules/.prisma/client"
 }
 
 datasource db {
@@ -16,29 +16,31 @@ datasource db {
 }
 
 model User {
-  id           Int          @id @default(autoincrement())
-  username     String       @unique
-  email        String       @unique
-  passwordHash String
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
-  habits       Habit[]      @relation("CreatedHabits")
-  entries      HabitEntry[]
-  notes        Note[]
+  id               Int          @id @default(autoincrement())
+  username         String       @unique
+  email            String       @unique
+  passwordHash     String
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+  habits           Habit[]      @relation("CreatedHabits")
+  entries          HabitEntry[]
+  notes            Note[]
+  pushSubscription String?
 }
 
 model Habit {
-  id          Int          @id @default(autoincrement())
-  name        String
-  description String?
-  frequency   Frequency
-  isPrivate   Boolean      @default(true)
-  createdBy   Int?
-  creator     User?        @relation("CreatedHabits", fields: [createdBy], references: [id])
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  entries     HabitEntry[]
-  notes       Note[]
+  id           Int          @id @default(autoincrement())
+  name         String
+  description  String?
+  frequency    Frequency
+  isPrivate    Boolean      @default(true)
+  createdBy    Int?
+  creator      User?        @relation("CreatedHabits", fields: [createdBy], references: [id])
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  entries      HabitEntry[]
+  notes        Note[]
+  reminderTime String?
 
   @@unique([name, createdBy], name: "unique_private_habit")
 }

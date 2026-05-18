@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import type {Habit} from '../../types';
 import { FaTimes } from 'react-icons/fa';
 import './HabitModal.scss';
+import { notificationService } from '../../utils/notificationService';
 
 interface HabitModalProps {
     isOpen: boolean;
@@ -15,15 +16,44 @@ export default function HabitModal({ isOpen, onClose, onSubmit, initialData }: H
     const [description, setDescription] = useState('');
     const [frequency, setFrequency] = useState<Habit['frequency']>('Daily');
 
+    const [hasReminder, setHasReminder] = useState(!!initialData?.reminderTime);
+    const [reminderTime, setReminderTime] = useState(initialData?.reminderTime || "12:00");
+
+    const handleReminderToggle = async (checked: boolean) => {
+        if (checked) {
+            const isGranted = await notificationService.requestPermission();
+
+            if (isGranted) {
+                setHasReminder(true);
+                await notificationService.subscribeUserToPush();
+            } else {
+                alert("To enable reminders, you must allow notifications in your browser settings!");
+                setHasReminder(false);
+            }
+        } else {
+            setHasReminder(false);
+        }
+    };
+
     useEffect(() => {
         if (initialData) {
             setName(initialData.name);
             setDescription(initialData.description || '');
             setFrequency(initialData.frequency || 'Daily');
+
+            if (initialData.reminderTime) {
+                setHasReminder(true);
+                setReminderTime(initialData.reminderTime);
+            } else {
+                setHasReminder(false);
+                setReminderTime('12:00');
+            }
         } else {
             setName('');
             setDescription('');
             setFrequency('Daily');
+            setHasReminder(false);
+            setReminderTime('12:00');
         }
     }, [initialData, isOpen]);
 
@@ -36,7 +66,8 @@ export default function HabitModal({ isOpen, onClose, onSubmit, initialData }: H
         onSubmit({
             name,
             description,
-            frequency
+            frequency,
+            reminderTime: hasReminder ? reminderTime : null
         });
     };
 
@@ -99,6 +130,31 @@ export default function HabitModal({ isOpen, onClose, onSubmit, initialData }: H
                         <small style={{ color: 'rgba(255,255,255,0.4)', fontSize: '12px', marginTop: '5px', display: 'block' }}>
                             Currently only daily tracking is supported.
                         </small>
+                    </div>
+
+                    {/* === SEKCJA PRZYPOMNIENIA (NOWOŚĆ) === */}
+                    <div className="form-group reminder-group">
+                        <label className="checkbox-label">
+                            <input
+                                type="checkbox"
+                                checked={hasReminder}
+                                onChange={(e) => handleReminderToggle(e.target.checked)}
+                            />
+                            <span>Enable Daily Reminder</span>
+                        </label>
+
+                        {hasReminder && (
+                            <div className="time-picker-wrapper">
+                                <label htmlFor="reminderTime">Select Time:</label>
+                                <input
+                                    id="reminderTime"
+                                    type="time"
+                                    value={reminderTime}
+                                    onChange={(e) => setReminderTime(e.target.value)}
+                                    required={hasReminder}
+                                />
+                            </div>
+                        )}
                     </div>
 
                     {/* ACTIONS */}
