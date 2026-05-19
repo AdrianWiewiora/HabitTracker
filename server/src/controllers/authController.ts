@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import {createUser, findUserByEmail, findUserById, findUserByUsername, updateUserPushSubscription} from "../services/userService.js";
+import {createUser, findUserByEmail, findUserById, findUserByUsername, updateUserPushSubscription, updateUser} from "../services/userService.js";
 import {AuthRequest} from "../middlewares/authMiddleware.js";
 
 const JWT_SECRET = process.env.JWT_SECRET || "default_secret";
@@ -135,5 +135,30 @@ export const savePushSubscription = async (req: AuthRequest, res: Response): Pro
     } catch (error) {
         console.error("Save push subscription error:", error);
         res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+
+export const updateProfile = async (req: AuthRequest, res: Response): Promise<void> => {
+    try {
+        const userId = req.user!.id;
+        const { username } = req.body;
+
+        if (!username || username.trim() === "") {
+            res.status(400).json({ error: "Username cannot be empty" });
+            return;
+        }
+
+        const existingUser = await findUserByUsername(username);
+        if (existingUser && existingUser.id !== userId) {
+            res.status(400).json({ error: "Username already taken" });
+            return;
+        }
+        await updateUser(userId, { username });
+
+        res.json({ message: "Profile updated successfully" });
+
+    } catch (error) {
+        console.error("Update profile error:", error);
+        res.status(500).json({ error: "Server error" });
     }
 };

@@ -31,3 +31,10 @@ export const updateUserPushSubscription = async (userId: number, subscription: s
         data: { pushSubscription: subscription },
     });
 };
+
+export const updateUser = async (userId: number, data: Prisma.UserUpdateInput) => {
+    return prisma.user.update({
+        where: { id: userId },
+        data,
+    });
+};

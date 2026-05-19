@@ -1,5 +1,5 @@
 import { Router } from "express";
-import {getMe, login, register, savePushSubscription} from "../controllers/authController.js";
+import {getMe, login, register, savePushSubscription, updateProfile} from "../controllers/authController.js";
 import { authenticateToken } from "../middlewares/authMiddleware.js";
 import { registerValidators, loginValidators, validate } from "../middlewares/validators.js";
 
@@ -21,5 +21,6 @@ authRouter.post(
 );
 authRouter.get("/me", authenticateToken, getMe);
 authRouter.post('/push-subscription', authenticateToken, savePushSubscription);
+authRouter.put("/update-profile", authenticateToken, updateProfile);
 
 export default authRouter;

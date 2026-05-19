@@ -18,7 +18,7 @@
   .modal-content {
     background-color: $background3-color;
     width: 90%;
-    max-width: 500px;
+    max-width: 450px; // Delikatnie zwężony dla lepszego balansu formularza konta
     border: 2px solid $primary-color;
     border-radius: 20px;
     padding: 30px;
@@ -36,7 +36,7 @@
 
       h2 {
         margin: 0;
-        font-size: 28px;
+        font-size: 26px;
         color: $primary-color;
         font-family: 'Anonymous Pro', monospace;
         font-weight: bold;
@@ -51,29 +51,55 @@
         font-size: 24px;
         cursor: pointer;
         transition: color 0.2s;
+        display: flex;
+        align-items: center;
 
         &:hover { color: $error-color; }
       }
     }
 
-    .form-group {
+    // --- STYLOWE KOMUNIKATY (BŁĄD / SUKCES) ---
+    .status-message {
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 14px;
       margin-bottom: 20px;
+      border: 1px solid transparent;
+      display: flex;
+      align-items: center;
+
+      &.success {
+        background-color: rgba(74, 222, 128, 0.1);
+        border-color: #4ade80;
+        color: #4ade80;
+      }
+
+      &.error {
+        background-color: rgba(248, 113, 113, 0.1);
+        border-color: #f87171;
+        color: #f87171;
+      }
+    }
+
+    .form-group {
+      margin-bottom: 22px;
 
       label {
-        display: block;
-        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 10px; // Układa ikonkę z tekstem labelu obok siebie
+        margin-bottom: 10px;
         font-weight: bold;
         font-size: 18px;
         color: rgba($text-color, 0.9);
 
-        small {
-          font-size: 0.8em;
-          color: rgba($text-color, 0.5);
-          font-weight: normal;
+        svg {
+          color: $primary-color;
+          font-size: 16px;
         }
       }
 
-      input, textarea, select {
+      input {
         width: 100%;
         background-color: $background2-color;
         border: 1px solid rgba($text-color, 0.2);
@@ -83,63 +109,17 @@
         color: $text-color;
         font-size: 16px;
         outline: none;
-        transition: border-color 0.2s;
+        transition: border-color 0.2s, box-shadow 0.2s;
 
         &::placeholder {
           font-family: 'Anonymous Pro', monospace;
-          color: rgba($text-color, 0.5);
-          opacity: 1;
+          color: rgba($text-color, 0.3);
         }
 
         &:focus {
           border-color: $primary-color;
           box-shadow: 0 0 5px rgba($primary-color, 0.3);
         }
-      }
-
-      textarea { resize: vertical; }
-
-      &.reminder-group {
-        display: flex;
-        flex-direction: column;
-
-        .checkbox-label {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-          cursor: pointer;
-          user-select: none;
-          font-size: 18px;
-
-          input[type="checkbox"] {
-            height: 22px;
-            accent-color: $primary-color;
-            cursor: pointer;
-            width: auto;
-          }
-        }
-        .time-picker-wrapper {
-          margin-top: 15px;
-          display: flex;
-          align-items: center;
-          gap: 15px;
-          animation: fadeIn 0.2s ease-out;
-
-          label {
-            margin-bottom: 0;
-            font-size: 16px;
-            white-space: nowrap;
-          }
-
-          input[type="time"] {
-            max-width: 140px;
-            text-align: center;
-            padding: 8px 12px;
-            font-size: 18px;
-            font-weight: bold;
-          }
-        }
-        
       }
     }
 
