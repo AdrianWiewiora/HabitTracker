@@ -2,23 +2,22 @@
 import prisma from "./prisma.js";
 import webpush from "web-push";
 
-// 1. Konfiguracja web-push kluczami VAPID z pliku .env
-const publicKey = process.env.VAPID_PUBLIC_KEY;
-const privateKey = process.env.VAPID_PRIVATE_KEY;
 
-if (!publicKey || !privateKey) {
-    console.warn('⚠️ Ostrzeżenie: Brak kluczy VAPID w pliku .env! Powiadomienia PUSH nie będą działać.');
-} else {
-    webpush.setVapidDetails(
-        'mailto:adi7878787@gmail.com',
-        publicKey,
-        privateKey
-    );
-}
-
-// 2. Główna funkcja budzika, którą importujesz w server.ts
 export const initReminderScheduler = () => {
     console.log('Budzik przypomnień został uruchomiony...');
+
+    const publicKey = process.env.VAPID_PUBLIC_KEY;
+    const privateKey = process.env.VAPID_PRIVATE_KEY;
+
+    if (!publicKey || !privateKey) {
+        console.warn('⚠️ Ostrzeżenie: Brak kluczy VAPID w pliku .env! Powiadomienia PUSH nie będą działać.');
+    } else {
+        webpush.setVapidDetails(
+            'mailto:adi7878787@gmail.com',
+            publicKey,
+            privateKey
+        );
+    }
 
     setInterval(async () => {
         try {

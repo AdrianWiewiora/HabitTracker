@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { FaEnvelope, FaLock } from 'react-icons/fa';
 import AuthLayout from '../../components/AuthLayout/AuthLayout';
 import { client } from '../../api/client';
-import { useAuth } from '../../context/AuthContext';
+import { GoogleLogin } from '@react-oauth/google';
 
 interface LoginResponse {
     token: string;
@@ -13,45 +13,61 @@ interface LoginResponse {
         email: string;
     };
 }
-
 export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
-    const navigate = useNavigate();
-    const { login } = useAuth(); // Wyciągamy funkcję login z kontekstu
-
+    // 1. KLASYCZNE LOGOWANIE
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
+        setIsLoading(true);
 
         try {
-            // Strzał do API
             const data = await client<LoginResponse>('/auth/login', {
-                body: {
-                    email,
-                    password
-                }
+                body: { email, password }
             });
 
-            // Logujemy w kontekście aplikacji (to zaktualizuje stan 'user' i zapisze token w localStorage)
-            login(data.token, data.user);
-
-            // Przekierowanie na Dashboard
-            navigate('/');
+            localStorage.setItem('token', data.token);
+            window.location.href = '/HabitTracker/';
 
         } catch (err: any) {
             console.error(err);
             setError(err.error || 'Login failed');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    // 2. LOGOWANIE PRZEZ GOOGLE
+    const handleGoogleSuccess = async (credentialResponse: any) => {
+        setError('');
+        setIsLoading(true);
+
+        try {
+            const data = await client<LoginResponse>('/auth/google', {
+                method: 'POST',
+                body: { credential: credentialResponse.credential }
+            });
+
+            localStorage.setItem('token', data.token);
+            window.location.href = '/HabitTracker/';
+
+        } catch (err: any) {
+            console.error(err);
+            setError(err.error || 'Google Authentication Failed');
+        } finally {
+            setIsLoading(false);
         }
     };
 
     return (
-        <AuthLayout title="Login">
+        <AuthLayout title="Log In">
             <form className="auth-form" onSubmit={handleLogin}>
 
-                {error && <div className="error-message">{error}</div>}
+                {error && <div className="message error">{error}</div>}
 
                 {/* Email */}
                 <div className="input-group">
@@ -62,6 +78,7 @@ export default function Login() {
                         required
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
+                        disabled={isLoading}
                     />
                 </div>
 
@@ -74,33 +91,32 @@ export default function Login() {
                         required
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
+                        disabled={isLoading}
                     />
                 </div>
 
-                <button type="submit" className="submit-btn">
-                    Login
+                <div className="forgot-password">
+                    <Link to="#">Forgot Password?</Link>
+                </div>
+
+                <button type="submit" className="submit-btn" disabled={isLoading}>
+                    {isLoading ? "Loading..." : "Login"}
                 </button>
 
-                {/*<div className="forgot-password">*/}
-                {/*    <a href="#">Forgot Password?</a>*/}
-                {/*</div>*/}
+                <div className="divider">OR</div>
 
-                {/*/!* Sekcja Social Media (zgodnie z projektem) *!/*/}
-                {/*<div className="divider">*/}
-                {/*    <span>Or</span>*/}
-                {/*</div>*/}
-
-                {/*<div className="social-login">*/}
-                {/*    <button type="button" className="social-btn google">*/}
-                {/*        <FaGoogle /> Google*/}
-                {/*    </button>*/}
-                {/*    <button type="button" className="social-btn facebook">*/}
-                {/*        <FaFacebook /> Facebook*/}
-                {/*    </button>*/}
-                {/*</div>*/}
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <GoogleLogin
+                        onSuccess={handleGoogleSuccess}
+                        onError={() => setError('Google login popup closed or failed.')}
+                        theme="filled_black"
+                        shape="pill"
+                        text="continue_with"
+                    />
+                </div>
 
                 <div className="auth-footer">
-                    Don't have account? <Link to="/register" className="link-highlight">Sign up</Link>
+                    Don't have an account? <Link to="/register" className="link-highlight">Sign Up</Link>
                 </div>
             </form>
         </AuthLayout>

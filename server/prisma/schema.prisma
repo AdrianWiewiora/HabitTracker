@@ -19,7 +19,8 @@ model User {
   id               Int          @id @default(autoincrement())
   username         String       @unique
   email            String       @unique
-  passwordHash     String
+  passwordHash     String?
+  googleId         String?      @unique
   createdAt        DateTime     @default(now())
   updatedAt        DateTime     @updatedAt
   habits           Habit[]      @relation("CreatedHabits")
